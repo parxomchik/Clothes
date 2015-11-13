@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jstl/core">
+<body>
+<ui:composition>
+    <footer class="footer col-md-12 padding_fix">
+        <div class="container col-xs-12 footer_padding">
+            <div class="col-md-3 text-center hidden-xs">
+                <img  class="logo_img center-block" src="#{request.contextPath}/resources/img/logo_img.png" alt=""/>
+                <a class="navbar-brand logo_footer text-center" href="#">ZERMON</a>
+            </div>
+            <div class="col-md-2 col-xs-12 text-center padding_fix">
+                <strong>
+                    <!--<h:link outcome="about" value="О нас" styleClass="font_size_16"/>-->
+                    <span class="font_size_16">О нас</span>
+                    <!--<a class="font_size_16" href="">О нас</a>-->
+                </strong>
+                <ul class="list-unstyled font_size_16">
+                    <h:link outcome="about" value="О компании" styleClass="font_size_16"/>
+                    <!--<li><a class="col-xs-6 col-md-12" href="#">О компании</a></li>-->
+                    <li>
+                        <h:link outcome="comments" value="Отзывы" styleClass="col-xs-6 col-md-12"/>
+                    </li>
+                    <li>
+                        <h:link outcome="news" value="Новости" styleClass="col-xs-6 col-md-12"/>
+                        <!--<a class="col-xs-6 col-md-12" href="#">Новости</a>-->
+                    </li>
+                    <li>
+                        <h:link outcome="articles" value="Статьи"/>
+                        <!--<a class="col-xs-6 col-md-12" href="#">Статьи</a>-->
+                    </li>
+                    <li class="hidden-xs">
+                        <h:link outcome="contacts" value="Контакты"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2 text-center col-xs-12 padding_fix">
+                <strong>
+                    <!--<h:link outcome="conditions" value="Условия" styleClass="font_size_16"/>-->
+                    <span class="font_size_16">Условия</span>
+                    <!--<a class="font_size_16" href="">Условия</a>-->
+                </strong>
+                <ul class="list-unstyled font_size_16">
+                    <li>
+                        <h:link outcome="cooperation" value="Сотрудничество" styleClass="col-xs-6 col-md-12" />
+                        <!--<a class="col-xs-6 col-md-12" href="#">Сотрудничество</a>-->
+                    </li>
+                    <li>
+                        <h:link outcome="paymentAndDelivery" value="Оплата и доставка" styleClass="col-xs-6 col-md-12" />
+                        <!--<a class="col-xs-6 col-md-12" href="#">Оплата и доставка</a>-->
+                    </li>
+                    <li>
+                        <h:link outcome="infoAboutMakingOfOrder" value="Оформление заказа" styleClass="col-xs-6 col-md-12" />
+                        <!--<a class="col-xs-6 col-md-12" href="#">Оформление заказа</a>-->
+                    </li>
+                    <li>
+                        <h:link outcome="safeguard" value="Гарантия" styleClass="col-xs-6 col-md-12" />
+                        <!--<a class="col-xs-6 col-md-12" href="#">Гарантия</a>-->
+                    </li>
+                    <li class="hidden-xs">
+                        <a data-toggle="modal" data-target=".register_modal">Вход/Регистрация</a>
+                    </li>
+                    <li class="hidden-xs" id="">
+                        <!--<h:link outcome="recall" value="Обратный звонок" data-toggle="modal" data-target="modal_contact"/>-->
+                        <a href="#" id="contact_phone" data-toggle="modal" data-target="#modal_contact">Обратный звонок</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2 text-center hidden-xs">
+                <strong>
+                    <span class="font_size_16">Каталог</span>
+                    <!--<a class="font_size_16" href="">Каталог</a>-->
+                </strong>
+                <ul class="list-unstyled font_size_16">
+                    <ui:repeat value="#{categoryBean.categories}" var="category">
+                        <li>
+                            <h:link outcome="filter" value="#{category.title}">
+                                <f:param name="id" value="#{category.id}"/>
+                            </h:link>
+                        </li>
+                    </ui:repeat>
+                </ul>
+            </div>
+            <div class="col-md-3 col-xs-12 text-center padding_left_0">
+                <strong>
+                    <h:link outcome="contacts" value="Контакты" styleClass="col-xs-12 font_size_16" />
+                    <!--<a class="col-xs-12 font_size_16" href="">Контакты</a>-->
+                </strong>
+                <ul class="list-unstyled font_size_16">
+                    <li>Наш адрес: г.Киев, ул.Срибнокильськая, 12</li>
+                    <li>Наши телефоны:</li>
+                    <li>+38(050) 341-00-87;</li>
+                    <li>+38(093) 936-23-83;</li>
+                    <li>+38(096) 363-72-33</li>
+                    <li>Наш Skype: Zermon.ua</li>
+                    <li>Наш E-mail: zermon.ua@gmail.com</li>
+                </ul>
+            </div>
+            <!--        <a class="navbar-brand logo_footer pull-right col-md-3 col-xs-12 text-center" href="#">ZERMON</a>-->
+            <!--    <hr class="white_line col-xs-12 padding_fix">-->
+        </div>
+    </footer>
+    <!--button toTop-->
+        <a href="" class="toTop" id="toTop"><i class="fa fa-angle-up fa-2x"></i></a>
+    <!--end button toTop-->
+    <div class="modal fade register_modal" id="regModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <!--        <h4 class="modal-title text-center">Добро пожаловать</h4>-->
+                    <div role="tabpanel">
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Войти</a></li>
+                            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Регистрация</a></li>
+                            <li role="presentation"><a href="#forgotPassword" aria-controls="forgotPassword" role="tab" data-toggle="tab">Забыли пароль</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="home">
+                                <h:form>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <p:inputText id="loginField" value="#{loginBean.login}" class="form-control"
+                                                         placeholder="Enter email" required="true" requiredMessage="Please enter login">
+                                                <f:validator binding="#{passwordValidator}" />
+                                                <f:attribute name="confirmPassword" value="#{pass}" />
+                                            </p:inputText>
+                                            <h:message id="loginFieldMessage" for="loginField" styleClass="message-red" />
+                                        </div>
+                                        <div class="form-group">
+                                            <p:password value="#{loginBean.pass}" class="form-control" placeholder="Enter password"
+                                                        id="confirmPassword" required="true" binding="#{pass}" requiredMessage="Please enter password"   />
+                                            <h:message id="confirmPasswordf" for="confirmPassword" styleClass="message-red" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <h:commandButton value="Войти" action="#{loginBean.loginAction}" styleClass="btn btn-success btn-block"  >
+                                            <f:ajax execute="@form" render="@form" />
+                                        </h:commandButton>
+                                    </div>
+
+                                </h:form>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="profile">
+                                <div role="tabpanel" class="tab-pane">
+                                    <h:form id="regForm">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <p:inputText id="emailRField" value="#{registerBean.email}" class="form-control"
+                                                         placeholder="Введите email" required="true" requiredMessage="Введите email">
+                                                <f:validator binding="#{emailValidator}" />
+                                            </p:inputText>
+                                            <h:message id="emailRFieldMessage" for="emailRField" styleClass="message-red" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p:password id="pass1RField" value="#{registerBean.pass}" class="form-control"
+                                                        placeholder="Введите пароль" required="true" requiredMessage="Введите пароль"
+                                                        match="pass2RField" validatorMessage="Passwords do not match">
+                                            </p:password>
+                                            <h:message id="pass1RFieldMessage" for="pass1RField" styleClass="message-red" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p:password id="pass2RField" value="#{registerBean.pass2}" class="form-control"
+                                                        placeholder="Введите пароль еще раз" required="true" requiredMessage="Введите пароль еще раз">
+                                            </p:password>
+                                            <h:message id="pass2RFieldMessage" for="pass2RField" styleClass="message-red" />
+                                        </div>
+
+                                        <h4 class="text-center">Введите личные данные</h4>
+                                        <div class="form-group">
+                                            <p:inputText id="nameRField" value="#{registerBean.name}" class="form-control"
+                                                         placeholder="Введите Фамилию и Имя" required="true" requiredMessage="Введите Фамилию и Имя">
+                                            </p:inputText>
+                                            <h:message id="nameRFieldMessage" for="nameRField" styleClass="message-red" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p:inputText id="countryRField" value="#{registerBean.country}" class="form-control"
+                                                         placeholder="Страна" required="true" requiredMessage="Страна">
+                                            </p:inputText>
+                                            <h:message id="countryRFieldMessage" for="countryRField" styleClass="message-red" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p:inputText id="cityRField" value="#{registerBean.city}" class="form-control"
+                                                         placeholder="Область, Город" required="true" requiredMessage="Область, Город">
+                                            </p:inputText>
+                                            <h:message id="cityRFieldMessage" for="cityRField" styleClass="message-red" />
+                                        </div>
+
+                                        <!--<div class="form-group">-->
+                                            <!--<p:inputText id="indexRField" value="#{registerBean.postIndex}" class="form-control"-->
+                                                         <!--placeholder="Индекс" required="true" requiredMessage="Индекс">-->
+                                            <!--</p:inputText>-->
+                                            <!--<h:message id="indexRFieldMessage" for="indexRField" styleClass="message-red" />-->
+                                        <!--</div>-->
+
+                                        <div class="form-group">
+                                            <p:inputText id="addressRField" value="#{registerBean.address}" class="form-control"
+                                                         placeholder="Адрес" required="true" requiredMessage="Адрес">
+                                            </p:inputText>
+                                            <h:message id="addressRFieldMessage" for="addressRField" styleClass="message-red" />
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <p:inputText id="phoneRField" value="#{registerBean.phone}" class="form-control"
+                                                         placeholder="Телефон" required="true" requiredMessage="Телефон">
+                                            </p:inputText>
+                                            <h:message id="phoneRFieldMessage" for="phoneRField" styleClass="message-red" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <script type="text/javascript">
+                                            function listener(data) {
+                                                var status = data.status; // Can be "begin", "complete" or "success".
+                                                console.log(data);
+
+                                                switch (status) {
+                                                    case "begin": // Before the ajax request is sent.
+                                                        // ...
+                                                        break;
+
+                                                    case "complete": // After the ajax response is arrived.
+                                                        // ...
+                                                        break;
+
+                                                    case "success": // After update of HTML DOM based on ajax response..
+                                                        if($("#regForm\\:global_flag_validation_failed").length === 0){
+                                                            $('#regModal').modal('hide');
+                                                            $('#successRegModal').modal('show');
+                                                        }
+
+                                                        // ...
+                                                        break;
+                                                }
+                                            }
+                                        </script>
+                                        <h:panelGroup id="global_flag_validation_failed_render" style="display: none;">
+                                            <h:outputText id="global_flag_validation_failed" value="true"
+                                                          rendered="#{facesContext.validationFailed}"/>
+                                        </h:panelGroup>
+                                        <h:commandButton value="Регистрация" action="#{registerBean.registerAction}" styleClass="btn btn-success btn-block"  >
+                                            <f:ajax execute="@form" render="@form" onevent="listener" />
+                                        </h:commandButton>
+                                    </div>
+
+                                    </h:form>
+                                </div>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="forgotPassword">
+                                <h:form>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <p:inputText id="forgotEmail" value="#{loginBean.forgotEmail}" class="form-control"
+                                                         placeholder="Enter email" required="true" requiredMessage="Please enter email">
+                                            </p:inputText>
+                                            <h:message for="forgotEmail" styleClass="message-red" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <h:commandButton value="Отправить" action="#{loginBean.resetPassword}" styleClass="btn btn-success btn-block"  >
+                                            <f:ajax execute="@form" render="@form" />
+                                        </h:commandButton>
+                                    </div>
+
+                                </h:form>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="successRegModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.replace('index.xhtml')"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel5">Статус</h4>
+                </div>
+                <div class="modal-body">
+                    Вы успешно зарегистрированы
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal contact-->
+    <div class="modal fade" id="modal_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Обратный звонок</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="call_phone" name="call_phone" placeholder="Ваш телефон"></input>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="call_name" name="call_name" placeholder="Ваше имя"></input>
+                        </div>
+                        <div class="modal-footer">
+                           <input type="submit" name="" id="" class="btn btn-success btn-block" value="Отправить"></input>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <div class="modal fade" id="korzinaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Ваши заказы</h4>
+                </div>
+                <h:form id="cartModalForm">
+                <div class="modal-body">
+                    <c:if test="#{cartBean.onlyItems.size() == 0}">
+                        Ничего тут нет
+                    </c:if>
+                    <ui:repeat id="itemsRepeate" value="#{cartBean.onlyItems}" var="item">
+                        <h:panelGroup id="cartItemBlock" layout="block">
+                            <ul class="media-list">
+                                <li class="media">
+                                    <p:commandButton styleClass="close" style="margin-right: -20px"
+                                                     type="button" value="&lt;span aria-hidden='true'&gt;&times;&lt;/span&gt;" escape="false" >
+                                        <p:ajax event="click" listener="#{cartBean.removeFromCart(item.id)}" execute="cartItemBlock#{item.id}" update=":cartModalForm :cartButtonForm" />
+                                    </p:commandButton>
+                                    <!--<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                                    <div class="media-left">
+
+                                        <!--<a href="#">-->
+                                        <h:link outcome="item">
+                                            <f:param name="id" value="#{item.id}"  />
+                                            <img data-src="holder.js/150x150/sky" class="media-object" src="/rest/image/item/#{item.id}/small" alt="..." height="150"/>
+                                        </h:link>
+                                        <!--</a>-->
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="col-md-12"><h4 class="media-heading">#{item.title}</h4></div>
+                                        <div class="col-md-12">
+                                            <p>Размер #{item.packSize}
+                                                <ui:param name="isSale" value="#{itemUtil.isSale(item.saleValue, item.saleStart, item.saleEnd)}" />
+                                                <ui:fragment rendered="#{not isSale}">
+                                                    <span class="pull-right margin_right_15 item_price">
+                                                        #{frontSiteSettings.formatPrice(item.packPrice)}
+                                                    </span>
+                                                </ui:fragment>
+                                                <ui:fragment rendered="#{isSale}">
+                                                    <span class="pull-right margin_right_15 item_price">
+                                                        <span style="text-decoration: line-through" class="text-muted">
+                                                            #{frontSiteSettings.formatPrice(item.packPrice)}
+                                                        </span>
+                                                        #{frontSiteSettings.formatPrice(cartBean.calculatePriceByItem(item))}
+                                                    </span>
+                                                </ui:fragment>
+
+                                            </p>
+
+                                            <p>
+                                                <label class="label_item_count" for="item_count">Количество: </label>
+                                                <!--<input type="number" class="item_count" id="item_count2" name="item_count" value="1" min="1" max="10" step="1"></input>-->
+                                                <p:inputText converter="javax.faces.Integer" value="#{cartBean.items[item]}" type="number" styleClass="item_count" id="item_count" name="item_count" min="1" max="1000" step="1" >
+                                                    <p:ajax event="change" execute="cartItemBlock#{item.id}" update=":cartModalForm:totalPrice" />
+                                                    <c:if test="#{view.viewId.endsWith('/makeOrder.xhtml')}">
+                                                        <p:ajax event="change" execute="cartItemBlock#{item.id}" update=":mainForm" />
+                                                    </c:if>
+                                                </p:inputText>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </h:panelGroup>
+                    </ui:repeat>
+                </div>
+                <div class="modal-footer">
+                    <!--<h:panelGroup id="totalPrice">-->
+                        <ui:param name="userDiscount" value="#{cartBean.sale}" />
+                        <ui:fragment rendered="#{userDiscount > 0}">
+                            <strong>Скидка:
+                                <h:outputText id="discount" value="#{userDiscount}%"/></strong>
+                            <br/>
+                        </ui:fragment>
+                        <ui:fragment id="totalPrice">
+                            <strong>Итого:
+                                <h:outputText style="text-decoration: line-through"
+                                              value="#{frontSiteSettings.formatPrice(cartBean.calculateTotalPriceWithoutDiscount())} " rendered="#{cartBean.userDiscount > 0}"/>
+                                <h:outputText value="#{frontSiteSettings.formatPrice(cartBean.calculateTotalPrice())}"/>
+                            </strong>
+                        </ui:fragment>
+                        <!--<strong >Итого: #{frontSiteSettings.formatPrice(cartBean.calculateTotalPrice())}</strong>-->
+                    <!--</h:panelGroup>-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Продолжить покупки
+                    </button>
+                    <!--<button type="button" class="btn btn-primary">Оформить заказ</button>-->
+                    <h:link type="button" styleClass="btn btn-primary" value="Оформить заказ" outcome="makeOrder" rendered="#{cartBean.onlyItems.size() > 0}"/>
+                </div>
+                </h:form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-64353202-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</ui:composition>
+</body>
+</html>

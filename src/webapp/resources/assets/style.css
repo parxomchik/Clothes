@@ -1,0 +1,135 @@
+label.inputIcon {
+    /*width:120px;*/
+    /*height:40px;*/
+    overflow:hidden;
+    position:relative;
+    /*background-color:#ccc;*/
+    cursor: pointer;
+}
+
+label.inputIcon input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    padding:0;
+}
+
+label.inputIcon div div span span {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    padding:0;
+}
+
+label .inputIcon div{
+    position: absolute;
+}
+
+.descriptionOverflow{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.saveButton{
+    background-image: url("#{resource['assets/global/img/portlet-collapse-icon-white.png']}");
+}
+
+.ui-growl{
+    background-color: white;
+    padding-top: 40px;
+}
+
+.ui-cell-editor-input{
+    color: #000000;;
+}
+
+select option[disabled] {
+    display: none;
+}
+
+.dataList .ui-datalist-content{
+    border: none;
+    background: transparent;
+    background-image: none;
+}
+
+.dataList .ui-datalist-item{
+    list-style-type: none;
+    padding:0;
+    margin: 0 0 0 -38px;
+}
+
+.ui-fileupload-preview {
+    /*max-width: 200px;*/
+    display: none;
+}
+
+.ui-fileupload-content .ui-progressbar {
+    width: 100px !important;
+}
+
+.confirm-override{
+    left: 38% !important;
+    top: 30% !important
+}
+
+.button-prime-fix{
+
+}
+
+.button-prime-fix span{
+    display: none !important;
+}
+
+.ui-datatable.ui-widget.ui-sortable-helper{
+    z-index: 100000 !important;
+}
+.ui-datepicker.ui-widget.ui-widget-content.ui-helper-clearfix.ui-corner-all{
+    z-index: 100500 !important;
+}
+
+.calendar-fix input {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.data-table-filter-fix div.ui-datatable-header.ui-widget-header.ui-corner-top{
+    position: absolute !important;
+}
+
+.ui-editor-popup {
+    z-index: 100000 !important;
+}
+
+.ui-selectcheckboxmenu-panel.ui-widget.ui-widget-content.ui-corner-all.ui-helper-hidden {
+    z-index: 100000 !important;
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:composite="http://xmlns.jcp.org/jsf/composite">
+<composite:interface>
+
+    <composite:attribute name="value" type="com.vasax.clothes.entities.component.PlainComponent" />
+    <composite:attribute name="styleClass" />
+    <composite:attribute name="dataSrc" />
+    <composite:attribute name="itemClass" />
+
+</composite:interface>
+
+<composite:implementation>
+
+    <h:outputText value="#{cc.attrs.value.value}" escape="false" rendered="#{cc.attrs.value.richTextField}" />
+
+    <ui:fragment rendered="#{cc.attrs.value.imageLink}">
+        <a href="#{cc.attrs.value.propertyForPlainComponents['link']}">
+            <img src="/rest/image/plainComponent/#{cc.attrs.value.id}/blob/content/#{pageComponentModalEdit.now}" alt="" class="#{cc.attrs.styleClass}" data-src="#{cc.attrs.dataSrc}"/>
+        </a>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{cc.attrs.value.slider}">
+        <div id="owl-demo" class="owl-carousel owl-theme"  >
+            <ui:param name="images" value="#{cc.attrs.value.blobPropertyForPlainComponentsKeysAsList}" />
+            <ui:repeat value="#{images}" var="imageKey" >
+                <div class="#{cc.attrs.itemClass}">
+                    <ui:param name="linkIndex" value="#{'link'}#{images.indexOf(imageKey)}" />
+                    <a href="#{cc.attrs.value.propertyForPlainComponents[linkIndex]}">
+                        <img class="#{cc.attrs.styleClass}" src="/rest/image/plainComponent/#{cc.attrs.value.id}/blob/#{imageKey}/#{pageComponentModalEdit.now}" data-src="holder.js/890x520/sky" alt="..."/>
+                    </a>
+                </div>
+            </ui:repeat>
+        </div>
+    </ui:fragment>
+
+</composite:implementation>
+</html>

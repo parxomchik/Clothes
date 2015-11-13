@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <style type="text/css">
+        .ui-autocomplete-item.ui-state-highlight td {
+            /*color: #017ebc;*/
+            /*color: transparent;*/
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form>
+        <h:inputText value="#{searchBean.inputQuery}" />
+        <h:commandButton action="#{searchBean.makeQuery}" value="Search" style="margin-left: 10px" />
+        <br/>
+        <ui:repeat value="#{searchBean.results}" var="rez">
+            <h:outputText value="#{rez.title}" /><br/>
+        </ui:repeat>
+        <br/>
+        <hr/>
+        <p:outputLabel value="Custom Content:" for="itemField" />
+        <p:autoComplete id="itemField" value="#{searchBean.item}" completeMethod="#{searchBean.complete}"
+                        var="item" itemLabel="#{item.title}" itemValue="#{item}" converter="#{itemConverter}" forceSelection="true">
+
+            <p:column>
+                <img src="rest/image/item/#{item.id}/small" alt="" height="100px" />
+            </p:column>
+
+            <p:column>
+                <h:outputText value="#{item.title}" />
+            </p:column>
+
+        </p:autoComplete>
+    </h:form>
+</h:body>
+</html>

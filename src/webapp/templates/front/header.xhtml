@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:body>
+    <ui:composition>
+        <!-- Fixed navbar -->
+        <h:form>
+        <nav class="navbar-inverse col-xs-12 hidden-xs padding_fix" id="menu1">
+            <div class="container col-xs-12 padding_fix">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="#{view.viewId.endsWith('/about.xhtml') ? 'active-menu-top' : ''}">
+                            <h:link outcome="about" value="О нас" />
+                            <!--<a href="#">О нас</a>-->
+                        </li>
+                        <li class="#{view.viewId.endsWith('/news.xhtml') ? 'active-menu-top' : ''}">
+                            <h:link outcome="news" value="Новости" />
+                            <!--<a href="#about">Новости</a>-->
+                        </li>
+                        <li class="#{view.viewId.endsWith('/cooperation.xhtml') ? 'active-menu-top' : ''}">
+                            <h:link outcome="cooperation" value="Сотрудничество" />
+                            <!--<a href="#contact">Условия</a>-->
+                        </li>
+                        <!--                <li><a href="#contact">Полезное
+                        </a></li>-->
+                        <li class="#{view.viewId.endsWith('/contacts.xhtml') ? 'active-menu-top' : ''}">
+                            <!--<a href="#contact">Контакты</a>-->
+                            <h:link outcome="contacts" value="Контакты" />
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right hidden-xs">
+                        <li id="carrency_label"><span>Валюта : </span></li>
+                        <li>
+                            <!--<select class="form-control padding_fix" id="currency">-->
+                                <!--<option>Грн</option>-->
+                                <!--<option>usd</option>-->
+                            <!--</select>-->
+                            <h:selectOneMenu valueChangeListener="#{loginBean.currencyChanged}"
+                                             value="#{loginBean.currencyType}" id="currency"
+                                             styleClass="form-control padding_fix" style="height: 22px; margin-top: 4px">
+                                <f:selectItem itemValue="grn" itemLabel="Грн" />
+                                <f:selectItem itemValue="usd" itemLabel="usd" />
+                                <f:ajax event="change"  />
+                            </h:selectOneMenu>
+                        </li>
+                        <li><a href="#contact" id="contact_tel">
+                            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+                            +38(093) 936-23-83<span class="caret"></span></a>
+                            <a href="#contact" id="contact_tel_more">
+                                <p>+38(050) 341-00-87 </p>
+                                <p>+38(096) 363-72-33</p>
+                            </a>
+                        </li>
+                        <!--
+                                        <li class="dropdown">
+                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                                  <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Action</a></li>
+                                    <li><a href="#">Another action</a></li>
+                                    <li><a href="#">Something else here</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">One more separated link</a></li>
+                                  </ul>
+                                </li>
+                        -->
+                        <c:if test="#{not loginBean.linked}">
+                            <li><a data-toggle="modal" data-target=".register_modal">Войти</a></li>
+                        </c:if>
+                        <c:if test="#{loginBean.linked}">
+                            <li>
+                                <div class="dropdown margin_top_5">
+                                    <a id="user_menu" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                       aria-expanded="false">
+                                        #{loginBean.user.name}
+                                        <span class="caret"></span>
+                                    </a>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="user_menu">
+                                            <li><a href="changePassword.xhtml">Изменить пароль</a></li>
+                                            <li><a href="">Опция1</a></li>
+                                            <li><a href="">Опция2</a></li>
+                                            <li><a href="">Опция3</a></li>
+                                            <li>
+                                                <!--<a href="">Выйти</a>-->
+                                                <h:commandLink action="#{loginBean.logoutAction}" value="Выйти"  >
+                                                    <!--<f:ajax render="@all" execute="@this" />-->
+                                                </h:commandLink>
+                                            </li>
+                                        </ul>
+                                </div>
+                            </li>
+                        </c:if>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        </h:form>
+        <nav class="  col-xs-12 font_size_17 padding_left_fix" role="navigation" id="main_nav">
+            <div class="container col-xs-12 padding_fix">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <h:link outcome="index" styleClass="navbar-brand logo">
+
+                    </h:link>
+                    <button  id="korzina_mob" class="btn margin_top_10 font_size_18 korzina_mob visible-xs" data-toggle="modal" data-target="#korzinaModal">
+                        <i class="fa fa-shopping-cart"></i>
+                        <c:if test="#{cartBean.onlyItems.size() > 0}">
+                            <span class="label label-warning">#{cartBean.onlyItems.size()}</span>
+                        </c:if>
+                    </button>
+                </div>
+
+                <div class="collapse navbar-collapse padding_fix" id="bs-example-navbar-collapse-1">
+                    <h:form>
+                        <ul class="nav navbar-nav text-center my-nav">
+                            <ui:repeat value="#{categoryBean.categories}" var="category" >
+                                <li class="dropdown #{(view.viewId.endsWith('/filter.xhtml') and (filterPageBean.categoryId == category.id or filterPageBean.parentCategory.id == category.id)) ? 'active_nav' : '' } ">
+                                    <h:link value="#{category.title}"  outcome="filter" styleClass="dropdown-toggle" data-toggle="dropdown">
+                                        <b class="caret hidden-xs"></b>
+                                        <!--<i class="fa fa-angle-down visible-xs dropdown_plus"></i>-->
+                                        <f:param name="id" value="#{category.id}" />
+                                    </h:link>
+                                    <ui:fragment rendered="#{categoryBean.isSubCategoryPresent(category.id)}">
+                                        <ul class="dropdown-menu font_size_16">
+                                            <ui:repeat value="#{categoryBean.getSubCategoriesByMainId(category.id)}" var="subcategory" >
+                                                <li>
+                                                    <h:link value="#{subcategory.title}" outcome="filter">
+                                                        <f:param name="id" value="#{subcategory.id}" />
+                                                    </h:link>
+                                                </li>
+                                            </ui:repeat>
+                                        </ul>
+                                    </ui:fragment>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+                    </h:form>
+                    <h:form id="cartButtonForm">
+                        <ui:fragment id="cartHeaderIcon" rendered="#{not (view.viewId.endsWith('/makeOrder.xhtml') and makeOrderPageBean.orderPrepared)}">
+                            <button id="korzina" type="button" class="btn margin_top_10 font_size_18 hidden-xs" data-toggle="modal" data-target="#korzinaModal">
+                                <i class="fa fa-shopping-cart"></i>
+                                <c:if test="#{cartBean.onlyItems.size() > 0}">
+                                    <span class="label label-warning">#{cartBean.onlyItems.size()}</span>
+                                </c:if>
+                            </button>
+                        </ui:fragment>
+                    </h:form>
+                    <form class="navbar-form" role="search">
+                        <div class="input-group col-xs-12  ">
+                            <h:form id="autoForm">
+                            <p:autoComplete id="completeR" value="#{searchBean.item}" completeMethod="#{searchBean.complete}"
+                                            var="item" itemLabel="#{item.title}" itemValue="#{item}" converter="#{itemConverter}" forceSelection="true"
+                                             inputStyleClass="form-control col-xs-12 search_input" inputStyle="margin-left: 10px; " style="width: 100%"
+                                    emptyMessage="Поиск не дал результатов" placeholder=" Поиск">
+
+                                <f:ajax event="itemSelect" execute=":autoform" listener="#{searchBean.onItemSelect}"  update=":autoForm" />
+
+                                <p:column>
+                                    <img src="rest/image/item/#{item.id}/small" alt="" height="200px" />
+                                </p:column>
+
+                                <p:column>
+                                    <h:outputText value="#{item.productCode}" />
+                                </p:column>
+
+                                <p:column>
+                                    <h:outputText value="#{item.title}" />
+                                </p:column>
+
+                            </p:autoComplete>
+                            </h:form>
+
+                            <!--<input id="search_input" type="text" class="form-control col-xs-12 search_input " placeholder=" Поиск"/>-->
+
+
+						<span class="input-group-btn text-right ">
+							<button id="reset_btn" type="reset" class="btn btn-default hidden-xs">
+								<span class="glyphicon glyphicon-remove">
+									<span class="sr-only">Close</span>
+								</span>
+                            </button>
+							<button id="search_btn" type="submit" class="btn btn-default margin_top_5">
+                                <span class="search_label visible-xs font_size_18"><em>Искать</em></span>
+								<span class="glyphicon glyphicon-search font_size_18">
+									<span class="sr-only">Search</span>
+								</span>
+                            </button>
+						</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </ui:composition>
+</h:body>
+</html>

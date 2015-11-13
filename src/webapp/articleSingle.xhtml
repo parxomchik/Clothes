@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+xmlns:vasax32="http://xmlns.jcp.org/jsf/composite/vasax32"
+xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+    <f:viewParam name="id" value="#{articleSinglePageBean.articleId}" />
+    <f:viewAction action="#{articleSinglePageBean.init}" />
+</f:metadata>
+<h:body>
+    <ui:composition template="templates/front/BasicTemplate.xhtml">
+        <ui:define name = "title"><title>Статьи</title></ui:define>
+
+    <ui:define name = "content">
+        <div class="container-fluid">
+            <div class="col-md-12 margin_top_20">
+            <!--<h3 class="text-center">Акции Друзей</h3>-->
+            <div class="col-md-4">
+                <div class="thumbnail news_left">
+                    <img alt="" src="rest/image/article/#{articleSinglePageBean.article.id}" />
+                    <h4>
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        <span id="news_date" class="text-center">
+                             <h:outputText value="#{articleSinglePageBean.article.lastModified}" >
+                                 <f:convertDateTime pattern="dd-MM-yyyy" />
+                             </h:outputText>
+                            <!--23-05-2015-->
+                        </span>
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-8 thumbnail padding_side_15">
+                <h1 class="margin_fix"><strong>#{articleSinglePageBean.article.title}</strong></h1>
+                <p style="font-size: 14.0pt"><b>#{articleSinglePageBean.article.header}</b></p>
+                <p>
+                    <span>
+                        <h:outputText value="#{articleSinglePageBean.article.description}" escape="false"/>
+                        <!--Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aut deserunt earum eos excepturi illum incidunt ipsam iste officiis perferendis quas quibusdam quod repellat, rerum sapiente. Eligendi ipsam ipsum omnis!</span><span>Amet atque corporis dicta dolore dolores dolorum fugit ipsum, iste laudantium maxime, odio porro quaerat quas quisquam quos repellendus veniam, vitae? Aliquid asperiores molestiae optio porro repellendus sed voluptatum! Dolor.</span><span>Aliquid aspernatur deserunt eum facere, laborum minima molestiae omnis rem? Accusamus aliquid animi aut, commodi eaque facere illum ipsa, non obcaecati qui quia quo quod rem repellat saepe sed unde?</span><span>Accusantium corporis ducimus incidunt ipsum possimus quaerat rem, sed vero? Accusamus alias aut deleniti, dolorem enim eveniet illum in iure minima odio officia, quia quo tempore ullam ut voluptatibus, voluptatum.</span><span>Aliquid dolorem eligendi incidunt laborum minus quod similique unde voluptate voluptatem voluptatum. Adipisci aliquid commodi cumque deleniti dicta, eos minima nemo, nesciunt porro, quisquam sed similique? Consequatur eaque exercitationem modi.</span><span>Beatae distinctio ducimus ea excepturi fuga fugiat illo molestias nesciunt sint. Aut enim eos minus quod? Ab commodi culpa, dignissimos dolores ex, id molestias nam officiis possimus quis sapiente sit!</span><span>Aut fugit labore odio quibusdam! Aperiam assumenda, optio! Ad adipisci alias asperiores aut deserunt dolor eum exercitationem labore molestiae, non obcaecati, quam, recusandae tenetur unde vero vitae voluptates voluptatibus voluptatum.</span><span>Beatae corporis deleniti dolorem expedita nostrum obcaecati, quibusdam reprehenderit voluptate! Aliquam beatae dolore impedit labore quae quo repellendus! Cumque illum optio rem. Deserunt perspiciatis provident sapiente sequi sint tempore voluptates!</span><span>Cupiditate ex, quia? Blanditiis eum facere neque numquam? A, animi consectetur dolor doloribus eaque esse fuga fugit ipsa ipsam maxime modi necessitatibus, nemo non omnis optio qui, suscipit tempora velit?</span><span>Accusantium ad eaque et facilis minima natus omnis quam quasi sunt ut? Autem dolorem ducimus eligendi, eum facere inventore ipsa laudantium libero neque nostrum odit possimus quisquam, repellat! Accusamus, provident!-->
+                </span></p>
+            </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+
+    <ui:define name="footerLibraries">
+        <!--Here you can include js ibraries-->
+    </ui:define>
+
+</ui:composition>
+</h:body>
+</html>

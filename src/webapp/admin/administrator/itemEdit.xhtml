@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+<ui:composition template="../../templates/admin/BasicAdminTemplate.xhtml">
+<ui:define name="title"><title>Items edit : #{constantsBean.projectName}</title></ui:define>
+    <ui:define name="sidebar">
+        <ui:include src="sidebar.xhtml"/>
+    </ui:define>
+<ui:define name="content">
+<!-- /.modal -->
+<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+<!-- BEGIN PAGE HEADER-->
+<!--<h3 class="page-title">-->
+    <!--Dish edit-->
+<!--</h3>-->
+<!-- BEGIN PAGE CONTENT-->
+<div class="row">
+<div class="col-md-12">
+<h:form id="form" enctype="multipart/form-data">
+<p:growl id="msgs" showDetail="true" life="1500" autoUpdate="true" />
+
+    <h:selectOneMenu value="#{itemEditBean.currentCategory}" style="margin-bottom: 15px  ;" converter="#{categoryConverter}">
+        <f:ajax listener="#{itemEditBean.currentCategoryChanged}" render="dataTable" />
+        <f:selectItems value="#{itemEditBean.allCategories}" var="cat" itemLabel="#{cat.parent != null ? cat.parent.title : ''} : #{cat.title}" itemValue="#{cat}"/>
+    </h:selectOneMenu>
+
+<!-- BEGIN SAMPLE TABLE PORTLET-->
+<div class="portlet box green">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="fa fa-cogs"></i>Items edit
+    </div>
+    <div class="tools">
+        <p:commandLink action="#{itemEditBean.save}" style="color:#fff" styleClass="glyphicon glyphicon-floppy-disk" >
+            <f:ajax update="dataTable" execute="@form" />
+        </p:commandLink>
+
+        <!--<a href="#portlet-config" data-toggle="modal" class="config">-->
+        <!--</a>-->
+        <p:commandLink action="#{itemEditBean.reload}"  styleClass="reload" >
+            <f:ajax render="dataTable" />
+        </p:commandLink>
+        <!--<a href="javascript:;" class="reload">-->
+        <!--</a>-->
+        <p:commandLink action="#{itemEditBean.addNew}" styleClass="glyphicon glyphicon-plus" style="color: #fff; margin-top: -9px;" >
+            <f:ajax render="dataTable" />
+        </p:commandLink>
+        <p:commandLink styleClass="glyphicon glyphicon-duplicate" style="color: #fff; margin-top: -9px;"
+                       onclick="$('#cloneModal').modal('toggle')">
+            <f:ajax render="clonePanel" />
+        </p:commandLink>
+        <p:commandLink styleClass="glyphicon glyphicon-piggy-bank" style="color: #fff; margin-top: -9px;"
+                       onclick="$('#saleModal').modal('toggle')">
+            <f:ajax render="saleEditBlock" />
+        </p:commandLink>
+    </div>
+</div>
+<div class="portlet-body flip-scroll">
+<p:dataTable id="dataTable" widgetVar="dataTableW" styleClass="data-table-filter-fix" var="item" value="#{itemEditBean.items}" draggableRows="true" editable="true" editMode="cell"
+        tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric" rowIndexVar="index"
+             rows="15"
+             paginator="true"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+             rowsPerPageTemplate="15, 30, 45, 60"
+        filteredValue="#{itemEditBean.filteredItems}"
+        resizableColumns="true">
+    <p:ajax event="rowReorder" listener="#{itemEditBean.onRowReorder}" update=":form:msgs" globalOnly="true"   />
+
+    <!--<f:facet name="header">-->
+        <!--Dishes-->
+    <!--</f:facet>-->
+
+    <!--<p:column headerText="Id" style="width: 3%; text-align: center">-->
+        <!--<h:outputText value="#{item.id}" />-->
+    <!--</p:column>-->
+
+    <f:facet name="header" >
+        <p:outputPanel>
+            <h:outputText value="Search all fields:" />
+            <p:inputText id="globalFilter" onkeyup="PF('dataTableW').filter()"  style="width:150px; height: 25px" placeholder="Enter keyword"/>
+        </p:outputPanel>
+    </f:facet>
+
+    <!--<p:column id="copyColumn" headerText="Copy" style="width: 3%; padding: 5px" visible="#{itemEditBean.copyModeActive}">-->
+        <!--<p:commandLink action="#{itemEditBean.cloneItem(item.id)}" style="text-align: center; margin-top:5px; margin-left: 7px; " styleClass="glyphicon glyphicon-copy">-->
+            <!--<f:ajax render="dataTable" />-->
+        <!--</p:commandLink>-->
+    <!--</p:column>-->
+
+    <p:column headerText="Articul" style="width: 4%; padding: 5px"
+              filterMatchMode="contains" filterBy="#{item.productCode}" filterPosition="top" filterStyle="width: 99%; display: none;" >
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{item.productCode}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{item.productCode}" style="width:96%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Title" style="width: 15%; padding: 5px"
+              filterMatchMode="contains" filterBy="#{item.title}" filterPosition="top" filterStyle="width: 99%; display: none;">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{item.title}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{item.title}" style="width:96%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <!--<p:column headerText="Firm" style="width: 5%; padding: 5px"  >-->
+        <!--<p:cellEditor>-->
+            <!--<f:facet name="output"><h:outputText value="#{item.firm}" /></f:facet>-->
+            <!--<f:facet name="input"><h:inputText value="#{item.firm}" style="width:96%" /></f:facet>-->
+        <!--</p:cellEditor>-->
+    <!--</p:column>-->
+
+    <p:column headerText="Description" style="padding: 5px">
+        <!--<p:cellEditor>-->
+            <!--<f:facet name="output"><h:outputText value="#{item.description}" styleClass="descriptionOverflow" /></f:facet>-->
+            <!--<f:facet name="input"><h:inputText value="#{item.description}" style="width:100%" /></f:facet>-->
+        <!--</p:cellEditor>-->
+        <h:panelGroup id="renderBlock" layout="block">
+            <h:outputText value="#{item.description}" escape="false" id = "newDesc" style="min-width: 100%; min-height: 20px" styleClass="descriptionOverflow"/>
+
+            <p:remoteCommand name="updateTableDesc" process="editor" update="dataTable" />
+            <p:overlayPanel id="descPanel" for="newDesc" showEvent="click" hideEvent="mousedown" showCloseIcon="true" dynamic="true">
+                <!--<h:outputText value="Change desc:" />-->
+                <!--<h:inputText value="#{item.description}" style="margin-left: 10px;">-->
+                    <!--<f:ajax event="change" render="newDesc"/>-->
+                <!--</h:inputText>-->
+                <p:editor id="editor" widgetVar="editorWidget"  value="#{item.description}" width="600" maxlength="10000" onchange="var updateNewDesc = function () {
+                    var index = '#{index}';
+                    console.log(index);
+                    PrimeFaces.widgets['editorWidget'].saveHTML();
+                    PrimeFaces.ab({
+                        source:'',
+                        f: 'form',
+                        process: 'form:dataTable:' + index + ':renderBlock',
+                        update: 'form:dataTable:' + index + ':newDesc',
+                        pa: arguments[0]
+                    });
+                };
+                updateNewDesc()" />
+                    <!--<f:ajax update="newDesc"/>-->
+                <!--</p:inputText>-->
+            </p:overlayPanel>
+        </h:panelGroup>
+    </p:column>
+
+    <p:column headerText="Size" style="width: 9%; padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{item.packSize}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{item.packSize}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Price" style="width: 5%; text-align: center">
+        <p:cellEditor>
+            <f:facet name="output">
+                <h:outputText value="#{item.price}" >
+                    <f:convertNumber pattern="0.00"/>
+                </h:outputText>
+            </f:facet>
+            <f:facet name="input" >
+                <h:inputText value="#{item.price}" converterId="javax.faces.Double" style="width:96%; text-align: center" >
+                    <f:convertNumber pattern="0.00"/>
+                </h:inputText>
+            </f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Pack Price" style="width: 7%; text-align: center">
+        <p:cellEditor>
+            <f:facet name="output">
+                <h:outputText value="#{item.packPrice}" >
+                    <f:convertNumber pattern="0.00"/>
+                </h:outputText>
+            </f:facet>
+            <f:facet name="input" >
+                <h:inputText value="#{item.packPrice}" converterId="javax.faces.Double" style="width:96%; text-align: center" >
+                    <f:convertNumber pattern="0.00"/>
+                </h:inputText>
+            </f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Category" style="width: 15%; text-align: center">
+        <h:selectOneMenu value="#{item.category}" style="width:96%" converter="#{categoryConverter}" >
+            <f:selectItems value="#{categoryEditBean.categoryForItems}" var="cat" itemLabel="#{cat.parent != null ? cat.parent.title : ''} : #{cat.title}" itemValue="#{cat}"/>
+        </h:selectOneMenu>
+    </p:column>
+
+    <p:column headerText="Img" style="width: 3%; text-align: center" >
+        <p:commandLink action="#{itemEditBean.selectItemForImageEdit(item.id)}" oncomplete="$('#imageModal').modal('toggle')">
+            <f:ajax render="form:modalImage" />
+            <span class="glyphicon glyphicon-picture"></span>
+        </p:commandLink>
+    </p:column>
+
+    <p:column headerText="Active" style="width: 4%; text-align: center">
+        <h:selectBooleanCheckbox value="#{item.active}" align="middle" />
+    </p:column>
+
+    <p:column headerText="Hit" style="width: 3%; text-align: center">
+        <h:selectBooleanCheckbox value="#{item.hit}" align="middle" />
+    </p:column>
+
+    <p:column headerText="Reservation" style="width: 3%; text-align: center">
+        <h:selectBooleanCheckbox value="#{item.reservation}" align="middle" />
+    </p:column>
+
+    <p:column headerText="Filter" style="width: 3%; text-align: center">
+        <p:commandLink action="#{itemEditBean.selectItem(item.id)}" oncomplete="$('#filterModal').modal('toggle')">
+            <f:ajax render="form:modal" />
+            <span class="glyphicon glyphicon-filter"></span>
+        </p:commandLink>
+    </p:column>
+
+    <p:column headerText="Relatives" style="width: 5%; text-align: center">
+        <p:commandLink action="#{itemEditBean.selectItemForRelative(item.id)}" oncomplete="$('#relativeModal').modal('toggle')" >
+            <f:ajax render="form:relativeModalPanel" />
+            <span class="glyphicon glyphicon-edit"></span>
+        </p:commandLink>
+    </p:column>
+
+    <!--<p:column headerText="Sale" style="width: 3%; text-align: center">-->
+        <!--<p:commandLink action="#{itemEditBean.selectItemForSaleR(item.id)}" oncomplete="$('#saleModal').modal('toggle')">-->
+            <!--<f:ajax render="form:saleEditBlock" />-->
+            <!--<span class="glyphicon glyphicon-filter"></span>-->
+        <!--</p:commandLink>-->
+    <!--</p:column>-->
+
+</p:dataTable>
+
+</div>
+</div>
+    <!-- Filter Modal -->
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="false">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Filter Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <h:panelGroup id="modal">
+                        <div class="portlet box green-meadow">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-cogs"></i>Items Filter Edit
+                                </div>
+                                <div class="tools">
+                                    <h:commandLink action="#{itemModalFilterEdit.saveIaps}"
+                                                   style="color:#fff" styleClass="glyphicon glyphicon-floppy-disk">
+                                        <f:ajax render="form:msgs" execute="@form"/>
+                                    </h:commandLink>
+                                </div>
+                            </div>
+                            <div class="portlet-body flip-scroll">
+                                <p:dataTable var="iap" value="#{itemModalFilterEdit.iaps}" editable="true" editMode="cell"
+                                             tableStyleClass="table table-bordered table-striped table-condensed flip-content"
+                                             rowStyleClass="numeric">
+                                    <p:column headerText="Attribute" style="width: 15%; padding: 5px">
+                                        <h:outputText value="#{iap.attribute.title}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Property" style="width: 15%; padding: 5px">
+                                        <h:selectOneMenu value="#{iap.property}" style="width:96%" converter="#{propertyAttrConverter}" >
+                                            <f:selectItems value="#{itemModalFilterEdit.getAvailableProperties(iap.attribute.id)}" var="prop" itemLabel="#{prop.title}" itemValue="#{prop}" />
+                                        </h:selectOneMenu>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 80%; margin-left: 10%">
+        <div id="imageEditModalBootstrap" class="modal-dialog">
+            <h:panelGroup id="modalImage">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="false">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel2">Items Image Edit</h4>
+                </div>
+                <div class="modal-body">
+
+
+                        <p:fileUpload fileUploadListener="#{itemModalImageEdit.upload}" ajax="true" auto="true" style="margin-bottom: 5px" update=":form:msgs, form:modalImage" multiple="true">
+                            <f:attribute name="itemId" value="#{itemModalImageEdit.selectedItemId}" />
+                        </p:fileUpload>
+                        <div class="portlet box green-meadow">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-cogs"></i>Items Image Edit
+                                </div>
+                                <!--<div class="tools">-->
+
+                                    <!--<label class="inputIcon">-->
+                                        <!--<span class="glyphicon glyphicon-plus" />-->
+
+                                    <!--</label>-->
+                                <!--</div>-->
+                            </div>
+                            <div class="portlet-body flip-scroll">
+                                <p:dataTable var="img" value="#{itemModalImageEdit.images}"
+                                             tableStyleClass="table table-bordered table-striped table-condensed flip-content"
+                                             rowStyleClass="numeric" editable="true" editMode="cell" draggableRows="true" >
+
+                                    <p:ajax event="rowReorder" listener="#{itemModalImageEdit.onRowReorder}" update=":form:msgs" globalOnly="true"   />
+                                    <p:ajax event="cellEdit" listener="#{itemModalImageEdit.onCellEdit}" />
+
+                                    <p:column headerText="Image" style="width: 10%; padding: 5px; text-align: center">
+                                        <p:graphicImage value="#{imageDishBean.image}" width="100%">
+                                            <f:param name="dishId" value="#{itemModalImageEdit.selectedItemId}" />
+                                            <f:param name="imageId" value="#{img.id}" />
+                                        </p:graphicImage>
+                                    </p:column>
+
+                                    <p:column headerText="Title" style="width: 20%; padding: 5px">
+                                        <h:outputText value="#{img.title}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Color" style="width: 9%; padding: 5px">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{img.color}" /></f:facet>
+                                            <f:facet name="input"><h:inputText value="#{img.color}" style="width:100%" /></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                    <p:column headerText="Id" style="width: 3%; text-align: center">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{img.colorId}" >
+                                                    <f:convertNumber pattern="0"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input" >
+                                                <h:inputText value="#{img.colorId}" converterId="javax.faces.Integer" style="width:96%; text-align: center" >
+                                                    <f:convertNumber pattern="0"/>
+                                                </h:inputText>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                    <p:column headerText="" style="width:2%; text-align: center; padding: 5px">
+                                        <label class="inputIcon">
+                                            <span class="glyphicon glyphicon-remove" />
+                                            <p:commandButton value="" styleClass="button-prime-fix" action="#{itemModalImageEdit.removeImage(item.id, img.id)}" >
+                                                <f:ajax render=":form:msgs :form:modalImage" />
+                                                <p:confirm header="Confirm" message="Are you sure?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+
+                                        </label>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" appendTo="form:modalImage" styleClass="confirm-override">
+                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+            </h:panelGroup>
+        </div>
+    </div>
+
+    <!-- Relative Modal -->
+    <div class="modal fade" id="relativeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="false">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel3">Relatives Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <h:panelGroup id="relativeModalPanel">
+                        <div class="portlet box green">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-cogs"></i>Relatives edit
+                                </div>
+                            </div>
+                            <div class="portlet-body flip-scroll">
+                                <p:dataTable var="item" value="#{itemModalRelativeEdit.items}"
+                                             tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric"
+                                             rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="10, 15, 30, 45, 60"
+                                             filteredValue="#{itemModalRelativeEdit.filteredItems}">
+
+                                    <p:column headerText="Id" style="width: 3%; text-align: center">
+                                        <h:outputText value="#{item.id}" />
+                                    </p:column>
+
+                                    <p:column headerText="Product code" style="width: 8%; padding: 5px"
+                                              filterMatchMode="contains" filterBy="#{item.productCode}" filterPosition="top" filterStyle="width: 99%;"  >
+                                        <h:outputText value="#{item.productCode}" />
+                                    </p:column>
+
+                                    <p:column headerText="Title" style="width: 15%; padding: 5px"  >
+                                        <h:outputText value="#{item.title}" />
+                                    </p:column>
+
+                                    <p:column headerText="" style="width: 4%; text-align: center" >
+                                        <h:panelGroup layout="block" rendered="#{not itemModalRelativeEdit.relativeIds.contains(item.id)}">
+                                            <label class="inputIcon">
+                                                <span class="glyphicon glyphicon-plus" />
+                                                <h:commandButton action="#{itemModalRelativeEdit.addRelative(item.id)}" >
+                                                    <f:ajax render="form:relativeModalPanel" execute="@this"/>
+                                                </h:commandButton>
+                                            </label>
+                                        </h:panelGroup>
+                                        <h:panelGroup layout="block" rendered="#{itemModalRelativeEdit.relativeIds.contains(item.id)}">
+                                            <label class="inputIcon">
+                                                <span class="glyphicon glyphicon-remove" />
+                                                <h:commandButton action="#{itemModalRelativeEdit.removeRelative(item.id)}" >
+                                                    <f:ajax render="form:relativeModalPanel" execute="@this"/>
+                                                </h:commandButton>
+                                            </label>
+                                        </h:panelGroup>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Clone modal-->
+    <div class="modal fade" id="cloneModal" tabindex="" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" name="overNightForm">
+                <div class="modal-header">
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="false">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel5">Choose items for clonning</h4>
+                </div>
+                <div class="modal-body">
+                    <h:panelGroup id="clonePanel">
+                        <div id="cloneModalBody">
+                            <div style="min-width:300px ; margin-bottom: 10px;">
+                                <span>Number of copies: </span>
+                                <p:inputText id="cloneCount" value="#{itemEditBean.cloneCount}" validatorMessage="Number should be between 1 and 100">
+                                    <f:validateLongRange minimum="1" maximum="100" for="cloneCount"/>
+                                </p:inputText>
+                                <!--<p:slider for="cloneCount" minValue="1" maxValue="100"/>-->
+                            </div>
+                            <p:selectCheckboxMenu value="#{itemEditBean.itemsIdForDuplicate}" label="Items"
+                                                  panelStyle="width:300px" style="min-width: 272px;" >
+                                <f:selectItems var="item" itemLabel="#{item.productCode} #{item.title}" itemValue="#{item.id}" value="#{itemEditBean.items}"  />
+                            </p:selectCheckboxMenu>
+
+                        </div>
+                    </h:panelGroup>
+                </div>
+                <div class="modal-footer">
+                    <p:commandButton action="#{itemEditBean.cloneItems}" value="Clone" styleClass="btn btn-primary" oncomplete="$('#cloneModal').modal('toggle')" >
+
+                    </p:commandButton>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Sale Modal -->
+    <div class="modal fade" id="saleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" name="overNightForm">
+                <div class="modal-header">
+                    <button id="modal_close" type="button" class="close" data-dismiss="modal"
+                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel4">Sale edit</h4>
+                </div>
+                <div id="multitripform" class="modal-body">
+                    <h:panelGroup id="saleEditBlock">
+                        <div class="col-md-12">
+                            <div class="form-group col-md-4">
+                                <p:inputText value="#{itemModalSaleEdit.item.saleValue}" styleClass="form-control" placeholder="Sale %" />
+                                <!--<input id="time_week_date_modal1" type="text" class="form-control"-->
+                                <!--name="date" placeholder="Sale %" />-->
+
+                            </div>
+                            <div class="form-group col-md-4">
+                                <p:calendar  value="#{itemModalSaleEdit.item.saleStart}" placeholder="Date start" styleClass="calendar-fix" pattern="dd.MM.yy" >
+                                    <f:converter converterId="timestampConverter" />
+                                </p:calendar>
+                                <!--<input id="time_start_modal" name="startTime"-->
+                                <!--class="form-control validation" maxlength="5"-->
+                                <!--placeholder="Date start"-->
+
+                                <!--/>-->
+                            </div>
+                            <div class="form-group col-md-4 ">
+                                <p:calendar  value="#{itemModalSaleEdit.item.saleEnd}" placeholder="Date end" styleClass="calendar-fix" pattern="dd.MM.yy">
+                                    <f:converter converterId="timestampConverter" />
+                                </p:calendar>
+                                <!--<input id="time_end_modal" name="endTime" class="form-control validation"-->
+                                <!--maxlength="5" placeholder="Date end"-->
+                                <!--/>-->
+                            </div>
+                            <p:selectCheckboxMenu value="#{itemModalSaleEdit.itemsIdForSale}" label="Items"
+                                                  panelStyle="width:300px" style="min-width: 272px;" >
+                                <f:selectItems var="item" itemLabel="#{item.productCode} #{item.title}" itemValue="#{item.id}" value="#{itemEditBean.items}"  />
+                            </p:selectCheckboxMenu>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                <div class="modal-footer">
+                    <p:commandButton action="#{itemModalSaleEdit.save}" value="Save changes" styleClass="btn btn-primary" oncomplete="$('#saleModal').modal('toggle')" >
+                        <p:ajax />
+                    </p:commandButton>
+                    <!--<button id="multitrip_save" type="button" class="btn btn-primary">Save changes-->
+                    <!--</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</h:form>
+</div>
+</div>
+</ui:define>
+</ui:composition>
+</h:body>
+</html>

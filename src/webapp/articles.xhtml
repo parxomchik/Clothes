@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+xmlns:vasax32="http://xmlns.jcp.org/jsf/composite/vasax32"
+xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+xmlns:p="http://primefaces.org/ui">
+<h:body>
+    <ui:composition template="templates/front/BasicTemplate.xhtml">
+        <ui:define name = "title"><title>Статьи</title></ui:define>
+
+    <ui:define name = "content">
+
+        <div id="content" class="col-xs-12" style="padding-bottom:20px">
+        <div class="row ">
+        <div class="col-md-12">
+            <h3 class="text-center">Статьи</h3>
+            <div class="row">
+                <ui:repeat value="#{articlePageBean.articles}" var="article">
+                    <div class="col-sm-6 col-md-3">
+                        <h:link outcome="articleSingle" styleClass="thumbnail">
+                            <f:param name="id" value="#{article.id}" />
+                            <img src="rest/image/article/#{article.id}" data-src="holder.js/300x300" alt="..."/>
+                            <div class="caption">
+                                <h3>#{article.title}</h3>
+                                <p style="font-size: 10.0pt"><b>#{article.header}</b><br/>
+                                <h:outputText value="#{article.preview}" escape="false" />
+                                </p>
+                            </div>
+                        </h:link>
+                    </div>
+                </ui:repeat>
+
+            </div>
+        </div>
+        </div>
+        </div>
+
+
+    </ui:define>
+
+    <ui:define name="footerLibraries">
+        <!--Here you can include js ibraries-->
+    </ui:define>
+
+</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:vasax32="http://java.sun.com/jsf/composite/vasax32">
+<h:body>
+<ui:composition template="templates/front/BasicTemplate.xhtml">
+    <ui:define name = "title"><title>#{indexPageBean.pageComponent.title}</title></ui:define>
+    <ui:define name = "description"> <meta name="description" content="#{indexPageBean.pageComponent.metaDesc}"/></ui:define>
+    <ui:define name = "keywords"><meta name="keywords" content="#{indexPageBean.pageComponent.metaKeywords}"/></ui:define>
+    <ui:define name="content">
+        <!-- Begin page content -->
+        <div id="content" class=" col-xs-12 ">
+            <div class="col-xs-12 margin_top_20 padding_fix">
+                <div class="col-md-4 col-sm-12 hidden-xs margin_bottom_20" id="tablet_two_in_a_row">
+                    <div class="col-md-12 col-sm-6 padding_fix">
+                    <vasax32:basicComponentOutput value="#{indexPageBean.components['banner1']}" styleClass="img-responsive col-sm-6-fix padding_fix" dataSrc="holder.js/450x250/sky" />
+                        </div>
+                    <!--<img class="img-responsive col-sm-6 padding_fix" src=""  data-src="holder.js/450x250/sky" alt="..."/>-->
+                    <div class="col-md-12 col-sm-6 padding_fix">
+                    <vasax32:basicComponentOutput value="#{indexPageBean.components['banner2']}" styleClass="margin_top_20 img-responsive col-sm-6-fix padding_fix margin_fix_mob" dataSrc="holder.js/450x250/sky" />
+                        </div>
+                    <!--<img class="margin_top_20 img-responsive col-sm-6 padding_fix" src="" data-src="holder.js/450x250/sky" alt="..."/>-->
+                </div>
+                <div class="col-md-8 col-sm-12 padding_left_responsive_5">
+
+
+                        <!--<div class="item"><img class="img-responsive" src="#{request.contextPath}/resources/img/slider/2.jpg" data-src="holder.js/890x520/sky" alt="..."/></div>-->
+                        <!--<div class="item"><img class="img-responsive" src="#{request.contextPath}/resources/img/slider/2.jpg" data-src="holder.js/890x520/sky" alt="..."/></div>-->
+                        <!--<div class="item"><img class="img-responsive" src="#{request.contextPath}/resources/img/slider/2.jpg" data-src="holder.js/890x520/sky" alt="..."/></div>-->
+                        <vasax32:basicComponentOutput value="#{indexPageBean.components['slider']}" itemClass="item" styleClass="img-responsive" dataSrc="holder.js/450x250/sky" />
+
+                </div>
+            </div>
+            <div class="col-md-12 margin_top_20 padding_fix">
+                <div class="col-md-12 col-xs-12" >
+                    <ui:repeat value="#{indexPageBean.mainCategories}" var="mainCategory">
+                        <h:link outcome="filter">
+                            <div class="col-md-2 col-sm-4 col-xs-6 category padding_fix">
+                                <img class="img-responsive col-xs-12 padding_fix" src="rest/image/category/#{mainCategory.id}" data-src="holder.js/200x270/sky" alt="..."/>
+                                <div class="col-md-12 col-sm-12 col-xs-12 hover_text">
+                                    <p class="text-center font_size_16">#{mainCategory.title} </p>
+                                </div>
+                            </div>
+                            <f:param name="id" value="#{mainCategory.id}"/>
+                        </h:link>
+                    </ui:repeat>
+                </div>
+            </div>
+            <c:if test="#{indexPageBean.hitItems.size() > 0}">
+                <div class="col-md-12 col-xs-12"><h1 class="text-center margin_top_20">Хиты продаж</h1></div>
+                <div class="col-md-12 col-xs-12">
+                    <div id="owl-demo2" class="owl-carousel owl-theme">
+                        <ui:repeat value="#{indexPageBean.hitItems}" var="hitItem">
+                            <h:link outcome="item">
+                                <div class="item category">
+                                    <img src="rest/image/item/#{hitItem.id}/small" alt="Owl Image"/>
+                                    <div class="col-md-12 hover_text">
+                                        <p class="text-center font_size_16">#{hitItem.title}</p>
+                                        <p class="text-center font_size_16">#{frontSiteSettings.formatPrice(hitItem.price)}</p>
+                                    </div>
+                                </div>
+                                <f:param name="id" value="#{hitItem.id}" />
+                            </h:link>
+
+
+                        </ui:repeat>
+                    </div>
+                </div>
+            </c:if>
+            <div class="col-md-12 col-xs-12"><h1 class="text-center margin_top_20">Оптовый магазин Zermon</h1></div>
+            <div class="clearfix"></div>
+            <section id="demo">
+                <div class="row margin_fix">
+                    <div class="col-md-10 col-md-offset-1">
+
+                <article>
+
+                   <!--<p>Модная и стильная одежда – это уверенность, свобода и удовольствие от каждого мгновения жизни. Интернет магазин модной одежды RED предоставляет возможность круглосуточного шоппинга и выбора качественных вещей от более 700 известных мировых брендов. Мы гарантируем подлинность всех наших товаров, так как напрямую сотрудничаем с производителями модных брендов, а также их официальными дистрибьюторами. RED – это стильная одежда для женщин, качественная одежда онлайн для детей, модная одежда для подростков, модная одежда для девушек, а также брендовая одежда, обувь и эксклюзивные аксессуары для мужчин.
+
+                    Для коллектива сотрудников RED модная индустрия не только работа, но и естественная жизненная стихия. Мы, в первую очередь, чувствуем моду, и только потом – изучаем ее новые тенденции и направления. Это качество помогает нам подбирать новые вещи в ассортимент, которые как раз находятся на гребне модной волны.
+
+                    Мы знаем, что брендовая одежда, обувь и оригинальные аксессуары делают людей членами стильного сообщества. Онлайн магазин одежды RED помогает значительно расширять это сообщество в нашей стране.</p>-->
+
+
+
+                    <!--        <h2>Artisanal Narwahls</h2>-->
+
+                    <!--<p>Zermon – это торговая марка модной мужской одежды, которая совсем недавно стала популярной в  восточной Европе и стремительно продолжает свою экспансию в Россию, Беларусь, Казахстан. </p>-->
+                    <!--<p>Zermon в Украине быстрыми темпами набирает обороты, завоевывая сердца украинских потребителей. Есть много причин, почему покупатели высоко ценят нас. Мы надеемся, что Вам тоже понравится сотрудничать с нами! </p>-->
+                    <!--<p>Zermon.ua – это современный оптовый интернет-магазин, в котором удобно делать оптовые покупки. Выбирать мужскую одежду на нашем сайте легко, интересно и увлекательно. Наши оптовые цены могут порадовать самых искушенных покупателей. И самое приятное – для того, чтобы купить мужскую одежду оптом, Вам не нужно проводить бессонные ночи в автобусе по дороге на 7 километр, не нужно тратить 400-600 долларов и 4 драгоценных дня на поездку в Турцию, рисковать с обменом валют, наматывать километры в Лалели в поисках нужного магазина мужской одежды. Достаточно сидя в своем удобном кресле зайти в интернет-магазин ZERMON, выбрать и купить мужские рубашки оптом, костюмы оптом, мужской трикотаж купить. Через несколько дней доставка нужного товара будет обеспечена на Ваш склад, в ваш магазин, или отделение перевозчика. Весь ассортимент мужской одежды Zermon находится уже на складах в Киеве. Ознакомиться с товаром вживую Вы можете в нашем светлом и просторном шоу-руме в районе метро Позняки.</p>-->
+                    <vasax32:basicComponentOutput value="#{indexPageBean.components['textBlock1']}" />
+                    <!--<p><h2 class="text-center">Наша одежда</h2></p>-->
+                    <!--<p>Наши дизайнеры создают как классическую, так и повседневную одежду для мужчин.  Современные тенденции моды многогранны и разнообразны. Но для мужчин самый верный способ  создать свой индивидуальный образ – это правильный выбор рубашки. Ведь именно мужская рубашка является основным атрибутом сильной половины. Широкий выбор мужских рубашек в гардеробе позволяет обеспечить удобство и комфорт на все случаи жизни. Мужские рубашки с коротким рукавом, рубашки с длинным рукавом, приталенные рубашки и классические, однотонные, в полоску, клетку, элегантные и функциональные, - позволят удовлетворить самого требовательного покупателя, наполнят ассортиментом и крупный розничный магазин, и элегантный бутик. В нашем интернет-магазине Вы можете купить рубашки оптом на любой вкус.</p>-->
+                    <!--<p>Также вы сможете приобрести модные мужские костюмы оптом от одной ростовки. Наши костюмы подойдут  для любого мероприятия,  можно выбрать деловой костюм, смокинг, костюм для жениха. Особой популярностью пользуются приталенные костюмы для выпускников.-->
+                        <!--Заботясь о стиле и индивидуальности мужчин, мы не забыли об аксессуарах. У нас можно найти мужские кожаные ремни,  ремни двусторонние, запонки, галстуки, бабочки, пластрон, моншер, формальные краватки, жилеты для свадеб дополнят и украсят любой гардероб. Особым спросом пользуются наши узкие галстуки и бабочки у-->
+                        <!--На нашем сайте можно подобрать мужскую одежду разных размеров, которая учитывает индивидуальные особенности фигуры. Есть большие размеры, slim fit, classic, regular fit.-->
+                        <!--Весной и осенью особой популярностью пользуются стильные пиджаки-->
+                        <!--Одной из ключевых ветвей наших поставок является всегда модный мужской трикотаж оптом. Разнообразные пуловеры, кардиганы, жилетки, поло, байки и футболки хорошего качества хорошо носятся в повседневной жизни, могут удобной и незаменимой одеждой для офиса. Для осенне-зимнего сезона у нас можно выбрать теплые свитера различного покроя, подобрать классическое кашемировое пальто, куртки. Дополнить ассортимент мужского магазина может добротный шерстяной шарф, или шелковый мужской шарф.-->
+                    <!--</p>-->
+                    <vasax32:basicComponentOutput value="#{indexPageBean.components['textBlock2']}" />
+                    <!--<p><h2 class="text-center">Качество</h2></p>-->
+                    <!--<p>Zermon в Украине специализируется на оптовых поставках мужской одежды высокого качества. При пошиве мужских костюмов используются итальянские ткани и высококачественная фурнитура. Вся наша продукция отшивается на одной из крупнейших фабрик мужской одежды в Стамбуле. Над созданием моделей работают итальянские и французские дизайнеры, которые имеют большой опыт создания коллекций других торговых марок, таких как UMBERTO LONI (УМБЕРТО ЛОНИ), FRANCO CASSEL (ФРАНКО КАССЕЛЬ),  GUISEPPE GENTILE (ДЖУЗЕППЕ ГЕНТИЛЕ).</p>-->
+                    <!--<p>Достичь минимальных цен в Украине на стильную мужскую одежду позволяет сотрудничество с надежным турецким производителем, соблюдающим точность лекал и стандарты процесса пошива, что обеспечивает красоту посадки костюмов и рубашек.  Цены на складах в Киеве уже включают затраты на карго и растаможку</p>-->
+                    <vasax32:basicComponentOutput value="#{indexPageBean.components['textBlock3']}" />
+                </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </ui:define>
+</ui:composition>
+</h:body>
+</html>

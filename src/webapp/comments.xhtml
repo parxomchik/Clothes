@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+xmlns:vasax32="http://xmlns.jcp.org/jsf/composite/vasax32"
+xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+xmlns:p="http://primefaces.org/ui">
+<h:body>
+    <ui:composition template="templates/front/BasicTemplate.xhtml">
+        <ui:define name = "title"><title>Отзывы</title></ui:define>
+
+    <ui:define name = "content">
+        <div class="row margin_fix">
+            <div class="col-md-10 col-md-offset-1">
+            <h1 class="text-center">Отзывы</h1>
+                <div class="min-height_300 padding_bottom_20">
+                    <!--Here will be comments-->
+                    <!--<div id="disqus_thread"></div>-->
+                    <!--<script type="text/javascript">-->
+                        <!--/* * * CONFIGURATION VARIABLES * * */-->
+                        <!--var disqus_shortname = 'zermon';-->
+
+                        <!--/* * * DON'T EDIT BELOW THIS LINE * * */-->
+                        <!--(function() {-->
+                            <!--//var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;-->
+                            <!--//dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';-->
+                            <!--//(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);-->
+                        <!--})();-->
+                    <!--</script>-->
+                    <!--<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>-->
+                    <div id="hypercomments_widget"></div>
+                    <script type="text/javascript">
+                        _hcwp = window._hcwp || [];
+                        _hcwp.push({widget:"Stream", widget_id: 60986});
+                        (function() {
+                            if("HC_LOAD_INIT" in window)return;
+                            HC_LOAD_INIT = true;
+                            var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+                            var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+                            hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/60986/"+lang+"/widget.js";
+                            var s = document.getElementsByTagName("script")[0];
+                            s.parentNode.insertBefore(hcc, s.nextSibling);
+                        })();
+                    </script>
+                    <a href="http://hypercomments.com" class="hc-link" title="comments widget">comments powered by HyperComments</a>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+    <ui:define name="footerLibraries">
+        <!--Here you can include js ibraries-->
+    </ui:define>
+
+</ui:composition>
+</h:body>
+</html>

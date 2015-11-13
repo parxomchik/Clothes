@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:vasax32="http://xmlns.jcp.org/jsf/composite/vasax32">
+<f:metadata>
+    <f:viewParam name="id" value="#{itemPageBean.itemId}" />
+    <f:viewAction action="#{itemPageBean.init}" />
+</f:metadata>
+<h:body>
+<ui:composition template="templates/front/BasicTemplate.xhtml">
+    <ui:define name = "title"><title>Zermon</title></ui:define>
+    <ui:define name="content">
+        <!-- Begin page content -->
+        <div id="content" class="col-xs-12" style="padding-bottom:20px">
+            <div class="col-md-12  margin_bottom_10 margin_top_10" >
+                <span>
+                    <ui:fragment rendered="#{itemPageBean.category.parent  != null}">
+                        <h:link outcome="filter" value="#{itemPageBean.category.parent.title}">
+                            <f:param name="id" value="#{itemPageBean.category.parent.id}"/>
+                        </h:link>
+                        >
+                    </ui:fragment>
+                    <h:link outcome="filter" value="#{itemPageBean.category.title}">
+                        <f:param name="id" value="#{itemPageBean.category.id}"/>
+                    </h:link>
+                </span>
+            </div>
+            <!--   <div class="container"> -->
+            <div class="col-md-12 main_content">
+                <div class="col-md-5 col-sm-12" style="padding:0">
+                    <div class="col-md-9 col-sm-8 col-xs-10 col col-sm-offset-1 col-md-offset-0 col-xs-offset-1"
+                         style="padding-left:0;">
+                        <a href="#" class="photo-block">
+                            <ui:fragment rendered="#{itemPageBean.item.reservation}">
+                            <div class="label_zakaz big">под заказ</div>
+                            </ui:fragment>
+                            <div class="photo">
+                                <!-- <img src="http://goober.com.ua/images/pimages/max/36426.jpg" alt=""> -->
+                                <img id="img_01" alt="" src="rest/image/item/#{itemPageBean.itemId}/watermark.jpg" data-zoom-image="rest/image/item/#{itemPageBean.itemId}/watermark"/>
+                            </div>
+                            <div class="scale-photo text-center">
+                                <span class="scale-photo"><i
+                                        class="glyphicon glyphicon-search"></i>Увеличить фото</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="clearfix visible-xs"></div>
+                    <div class="col-md-3 col-sm-2 col-xs-12" style="padding:0 5px;">
+                        <div class="vertical-carousel hidden-xs">
+                            <ul id="gallery_01" class="item-list">
+                                <c:forEach items="#{itemPageBean.imageIds}" var="imageId">
+                                    <li>
+                                        <a href="#" data-image='rest/image/#{imageId}/watermark.jpg'
+                                           data-zoom-image="rest/image/#{imageId}/watermark.jpg" class="#{imageId == itemPageBean.imageIds.get(0) ? 'active' : ''}">
+                                            <div class="photo">
+                                                <img id="img_011" src="rest/image/#{imageId}/small.jpg" alt=""/>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-7 col-sm-12" style="margin-bottom:20px">
+                    <!--<p class="firm-name text-muted">-->
+                        <!--#{itemPageBean.item.firm}-->
+                    <!--</p>-->
+                    <p class="item-name">
+                        #{itemPageBean.item.title}
+                    </p>
+                    <p class="text-muted">
+                        Код продукта: <span class="product_code">
+                        #{itemPageBean.item.productCode}
+                        <c:if test="#{itemPageBean.colors.size() > 0}" >
+                            / <span id="productCodeSuffix"></span>
+                        </c:if>
+                        </span>
+                    </p>
+                    <ui:param name="isSale" value="#{itemUtil.isSale(itemPageBean.item.saleValue, itemPageBean.item.saleStart, itemPageBean.item.saleEnd)}" />
+                    <p>
+                        Оптовая цена за единицу:
+                        <ui:fragment rendered="#{not isSale}">
+                            <span class="product_price_single">
+                                #{frontSiteSettings.formatPrice(itemPageBean.item.price)}
+                            </span>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{isSale}">
+                            <span class="product_price_single">
+                                <span style="text-decoration: line-through">
+                                    #{frontSiteSettings.formatPrice(itemPageBean.item.price)}
+                                </span>
+                                #{frontSiteSettings.formatPrice(itemPageBean.item.price - itemPageBean.item.price * itemPageBean.item.saleValue / 100)}
+                            </span>
+                        </ui:fragment>
+
+                    </p>
+                    <p style="position:relative;">
+                        Цена за упаковку:
+                        <ui:fragment rendered="#{not isSale}">
+                            <span class="product_price_pack">
+                                #{frontSiteSettings.formatPrice(itemPageBean.item.packPrice)}
+                            </span>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{isSale}">
+                            <span class="product_price_single">
+                                <span style="text-decoration: line-through" class="text-muted">
+                                    #{frontSiteSettings.formatPrice(itemPageBean.item.packPrice)}
+                                </span>
+                                #{frontSiteSettings.formatPrice(itemPageBean.item.packPrice - itemPageBean.item.packPrice * itemPageBean.item.saleValue / 100)}
+                            </span>
+                        </ui:fragment>
+                    </p>
+                    <div class="clearfix"></div>
+                    <hr/>
+                    <p class="pack_size_p">
+                        <b>Размеры комплекта:</b>
+                        <br class="visible-xs"/>
+                        <span class="pack_size">#{itemPageBean.item.packSize}</span>
+                        <a href="#size-tableModal" id="size-table" class="pull-right" data-toggle="modal" data-target="#size-tableModal"><i class="fa fa-table"></i> <span class="hidden-xs">Таблица размеров</span></a>
+                    </p>
+                    <h:form id="countAddForm">
+                        <p>
+                            <label class="label_item-count" for="item_count">Количество: </label>
+                            <!--<input type="number" class="item_count" id="item_count" name="item_count" value="1" min="1" max="10" step="1"/>-->
+                            <p:inputText converter="javax.faces.Integer" value="#{itemPageBean.itemCount}" type="number" styleClass="item_count" id="item_count" name="item_count" min="1" max="1000" step="1" />
+
+                        </p>
+                        <p>
+                            <c:if test="#{itemPageBean.colors.size() > 0}" >
+                                <label for="item_color">Цвет: </label>
+                                <select name="item_color" id="item_color" style="padding:5px">
+                                    <ui:repeat value="#{itemPageBean.colors}" var="color">
+                                        <option>#{color}</option>
+                                    </ui:repeat>
+                                </select>
+                                <script type="text/javascript">
+                                    var ids ={};
+                                </script>
+                                <ui:repeat value="#{itemPageBean.colors}" var="color">
+                                    <script type="text/javascript">
+                                        ids["#{color}"] = "#{itemPageBean.getColorId(color)}"
+                                    </script>
+                                </ui:repeat>
+                                <script type="text/javascript">
+                                    console.log(ids);
+                                    var setColorIdByColor = function (color) {
+                                        console.log(ids[color]);
+                                        $('#productCodeSuffix').text(ids[color]);
+                                    };
+                                    $('#item_color').on('change', function() {
+                                        setColorIdByColor(this.value);
+                                    });
+                                    for (var k in ids) {
+                                        setColorIdByColor(k);
+                                        break;
+                                    }
+                                </script>
+                            </c:if>
+                            <c:if test="#{itemPageBean.colors.size() == 0}" >
+                                <label for="item_color" class="text-muted">Цвет: </label>
+                            </c:if>
+
+                            <a href="#{itemPageBean.item.category.dropbox}" class="pull-right">
+                                <img src="resources/img/dropbox.gif" alt="" width="20px"/><span class="hidden-xs"> Фотокаталог</span>
+                            </a>
+                        </p>
+                        <div class="button_div" style="position:relative;">
+                            <p:commandButton actionListener="#{itemPageBean.addToCart}" ajax="true" update=":cartButtonForm :cartModalForm"
+                                             value="&lt;i class='fa fa-shopping-cart'&gt;&lt;/i&gt; Добавить в корзину" escape="false" styleClass="btn btn-default add_to_basket pull-right"
+                                    style="position: absolute" rendered="#{not itemPageBean.item.reservation}"/>
+                        </div>
+                    </h:form>
+                    <hr/>
+                    <div class="clear-fix"></div>
+                    <div class="tabs ">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab-1" data-toggle="tab">Описание</a></li>
+                            <li class=""><a href="#tab-2" data-toggle="tab">Доставка и оплата</a></li>
+                            <li class=""><a href="#tab-3" data-toggle="tab">Отзывы</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane fade in active">
+                                <h:outputText value="#{itemPageBean.item.description}" escape="false"/>
+                            </div>
+                            <div id="tab-2" class="tab-pane fade">
+                                <vasax32:basicComponentOutput value="#{itemPageBean.components['deliveryAndPayment']}" />
+                                <!--<p>Информация про доставку и оплату...</p>-->
+                            </div>
+                            <div id="tab-3" class="tab-pane fade">
+                                <!--<form action="" method="" class="comment">-->
+                                    <!--<p/>-->
+                                    <!--<label for="comment_text">Место под форму</label>-->
+                                <!--</form>-->
+                                <div id="hypercomments_widget"></div>
+                                <script type="text/javascript">
+                                    _hcwp = window._hcwp || [];
+                                    _hcwp.push({widget:"Stream", widget_id: 60986, xid:"zermon.com.ua/item/"+window.location.toString().split("=")[1]});
+                                    (function() {
+                                        if("HC_LOAD_INIT" in window)return;
+                                        HC_LOAD_INIT = true;
+                                        var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+                                        var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+                                        hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/60986/"+lang+"/widget.js";
+                                        var s = document.getElementsByTagName("script")[0];
+                                        s.parentNode.insertBefore(hcc, s.nextSibling);
+                                    })();
+                                </script>
+                                <a href="http://hypercomments.com" class="hc-link" title="comments widget">comments powered by HyperComments</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="tabs margin_top_15">
+                    <ul class="nav nav-tabs">
+                        <c:if test="#{itemPageBean.relatives.size() > 0}">
+                            <li class="active"><a href="#second_tab-1" data-toggle="tab">Сопутствующие товары</a></li>
+                        </c:if>
+                        <c:if test="#{itemPageBean.relatives.size() == 0}">
+                            <script type="text/javascript">
+                                $( document ).ready(function() {
+                                    $("#second_tab-2-Href").click();
+                                });
+                            </script>
+                        </c:if>
+                        <c:if test="#{loginBean.viewedItemsAsList.size() > 0}">
+                            <li class=""><a id="second_tab-2-Href" href="#second_tab-2" data-toggle="tab">Просмотренные товары</a></li>
+                        </c:if>
+                    </ul>
+                    <div class="tab-content">
+                        <c:if test="#{itemPageBean.relatives.size() > 0}">
+                            <div id="second_tab-1" class="tab-pane fade in active">
+                                <div id="owl-demo2" class="owl-carousel owl-theme">
+                                    <ui:repeat value="#{itemPageBean.relatives}" var="relative">
+                                        <h:link outcome="item">
+                                            <div class="item category">
+                                                <img src="rest/image/item/#{relative.id}/small" alt="Owl Image"/>
+                                                <div class="col-md-12 hover_text">
+                                                    <p class="text-center font_size_16">#{relative.title}</p>
+                                                    <p class="text-center font_size_16">#{frontSiteSettings.formatPrice(relative.price)}</p>
+                                                </div>
+                                            </div>
+                                            <f:param name="id" value="#{relative.id}" />
+                                        </h:link>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                        </c:if>
+                        <c:if test="#{loginBean.viewedItemsAsList.size() > 0}">
+                            <div id="second_tab-2" class="tab-pane fade ">
+                                <div id="owl-demo3" class="owl-carousel owl-theme">
+                                    <ui:repeat value="#{loginBean.viewedItemsAsList}" var="viewdItem">
+                                        <h:link outcome="item">
+                                            <div class="item category">
+                                                <img src="rest/image/item/#{viewdItem.id}/small" alt="Owl Image"/>
+                                                <div class="col-md-12 hover_text">
+                                                    <p class="text-center font_size_16">#{viewdItem.title}</p>
+                                                    <p class="text-center font_size_16">#{frontSiteSettings.formatPrice(viewdItem.price)}</p>
+                                                </div>
+                                            </div>
+                                            <f:param name="id" value="#{viewdItem.id}" />
+                                        </h:link>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                        </c:if>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--Modal for size-table -->
+
+        <div class="modal fade" id="size-tableModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center" id="myModalLabel">Таблица размеров</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!--КАРТИНКА-->
+                        <img src="../resources/img/size-table-img.png" alt="size-table" class="center size-table-img"></img>
+                       <!--ФУТБОЛКИ, СВИТЕРА-->
+                        <ui:fragment rendered="#{itemPageBean.item.category.parent.title == 'Трикотаж'}">
+                        <h3>Футболки, свитера</h3>
+                        <table id="table-size-sviter" class="size_table">
+                                <th>международные размеры</th>
+                                <th>обхват груди, см</th>
+                                <th>размер</th>
+                                <tr>
+                                    <td>xxs</td>
+                                    <td>81</td>
+                                    <td>40</td>
+                                </tr>
+                                <tr>
+                                    <td>xs</td>
+                                    <td>86</td>
+                                    <td>42</td>
+                                </tr>
+                                <tr>
+                                    <td>x</td>
+                                    <td>91</td>
+                                    <td>44</td>
+                                </tr>
+                            <tr>
+                                <td>m</td>
+                                <td>96</td>
+                                <td>46</td>
+                            </tr>
+                            <tr>
+                                <td>l</td>
+                                <td>101</td>
+                                <td>48</td>
+                            </tr>
+                            <tr>
+                                <td>xl</td>
+                                <td>106</td>
+                                <td>50</td>
+                            </tr>
+                            <tr>
+                                <td>xxl</td>
+                                <td>111</td>
+                                <td>52</td>
+                            </tr>
+                            <tr>
+                                <td>xxxl</td>
+                                <td>118</td>
+                                <td>54</td>
+                            </tr>
+                        </table>
+                        </ui:fragment>
+                        <!--ДЖИНСЫ-->
+                        <ui:fragment rendered="#{itemPageBean.item.category.parent.title == 'Брюки'}">
+                            <h3>Джинсы, брюки (длинна по внутреннему шву)</h3>
+                            <table id="table-size-jinsi-1" class="size_table">
+                                <th>обхват талии, дюймы (w)</th>
+                                <th>обхват талии, см</th>
+                                <th>международные размеры</th>
+                                <tr>
+                                    <td>26</td>
+                                    <td>66</td>
+                                    <td>xxs</td>
+                                </tr>
+                                <tr>
+                                    <td>27</td>
+                                    <td>69</td>
+                                    <td>xs</td>
+                                </tr>
+                                <tr>
+                                    <td>28</td>
+                                    <td>71</td>
+                                    <td>xs</td>
+                                </tr>
+                                <tr>
+                                    <td>29</td>
+                                    <td>74</td>
+                                    <td>s</td>
+                                </tr>
+                                <tr>
+                                    <td>30</td>
+                                    <td>76</td>
+                                    <td>s</td>
+                                </tr>
+                                <tr>
+                                    <td>31</td>
+                                    <td>79</td>
+                                    <td>m</td>
+                                </tr>
+                                <tr>
+                                    <td>32</td>
+                                    <td>81</td>
+                                    <td>m</td>
+                                </tr>
+                                <tr>
+                                    <td>33</td>
+                                    <td>84</td>
+                                    <td>l</td>
+                                </tr>
+                                <tr>
+                                    <td>34</td>
+                                    <td>86</td>
+                                    <td>l</td>
+                                </tr>
+                                <tr>
+                                    <td>35</td>
+                                    <td>89</td>
+                                    <td>xl</td>
+                                </tr>
+                                <tr>
+                                    <td>36</td>
+                                    <td>91</td>
+                                    <td>xl</td>
+                                </tr>
+                                <tr>
+                                    <td>38</td>
+                                    <td>96</td>
+                                    <td>xxl</td>
+                                </tr>
+                                <tr>
+                                    <td>40</td>
+                                    <td>101</td>
+                                    <td>xxl</td>
+                                </tr>
+                                <tr>
+                                    <td>42</td>
+                                    <td>106</td>
+                                    <td>xxxl</td>
+                                </tr>
+                                <tr>
+                                    <td>44</td>
+                                    <td>111</td>
+                                    <td>4xl</td>
+                                </tr>
+                                <tr>
+                                    <td>46</td>
+                                    <td>116</td>
+                                    <td>4xl</td>
+                                </tr>
+                                <tr>
+                                    <td>48</td>
+                                    <td>122</td>
+                                    <td>5xl</td>
+                                </tr>
+                            </table>
+
+
+                        <h3>Джинсы, брюки (длинна по внутреннему шву)</h3>
+                        <table id="table-size-jinsi-2" class="size_table">
+                            <th>международные размеры</th>
+                            <th>длинна по внутреннему шву, дюймы (l)</th>
+                            <th>длинна по внутреннему шву</th>
+                            <tr>
+                                <td>короткие</td>
+                                <td>30</td>
+                                <td>76</td>
+                            </tr>
+                            <tr>
+                                <td>обычные</td>
+                                <td>32</td>
+                                <td>81</td>
+                            </tr>
+                            <tr>
+                                <td>длинные</td>
+                                <td>34</td>
+                                <td>86</td>
+                            </tr>
+                            <tr>
+                                <td>длинные</td>
+                                <td>36</td>
+                                <td>91</td>
+                            </tr>
+                            <tr>
+                                <td>очень длинные</td>
+                                <td>38</td>
+                                <td>96</td>
+                            </tr>
+                        </table>
+                        </ui:fragment>
+                        <!--РУБАШКИ-->
+                        <ui:fragment rendered="#{itemPageBean.item.category.parent.title == 'Рубашки'}">
+                        <h3>Рубашки</h3>
+                        <table id="table-size-rybashki" class="size_table">
+                            <th>международные размеры</th>
+                            <th>обхват груди, см</th>
+                            <th>Размеры</th>
+                            <th>обхват шеи, дюймы</th>
+                            <th>обхват шеи, см</th>
+                            <tr>
+                                <td>xxs</td>
+                                <td>81-86</td>
+                                <td>40</td>
+                                <td>14.25</td>
+                                <td>36</td>
+                            </tr>
+                            <tr>
+                                <td>xs</td>
+                                <td>86-91</td>
+                                <td>42</td>
+                                <td>14½</td>
+                                <td>37</td>
+                            </tr>
+                            <tr>
+                                <td>s</td>
+                                <td>91-96</td>
+                                <td>44</td>
+                                <td>15</td>
+                                <td>38</td>
+                            </tr>
+                            <tr>
+                                <td>m</td>
+                                <td>96-101</td>
+                                <td>46</td>
+                                <td>15½</td>
+                                <td>39</td>
+                            </tr>
+                            <tr>
+                                <td>m</td>
+                                <td>96-101</td>
+                                <td>46</td>
+                                <td>15¾</td>
+                                <td>40</td>
+                            </tr>
+                            <tr>
+                                <td>l</td>
+                                <td>101-106</td>
+                                <td>48</td>
+                                <td>16</td>
+                                <td>41</td>
+                            </tr>
+                            <tr>
+                                <td>l</td>
+                                <td>101-106</td>
+                                <td>48</td>
+                                <td>16½</td>
+                                <td>42</td>
+                            </tr>
+                            <tr>
+                                <td>xl</td>
+                                <td>106-111</td>
+                                <td>50</td>
+                                <td>17</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>xl</td>
+                                <td>106-111</td>
+                                <td>50</td>
+                                <td>17.5</td>
+                                <td>44</td>
+                            </tr>
+                            <tr>
+                                <td>xxl</td>
+                                <td>111-116</td>
+                                <td>52</td>
+                                <td>17¾</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>xxl</td>
+                                <td>111-116</td>
+                                <td>52</td>
+                                <td>18</td>
+                                <td>46</td>
+                            </tr>
+                            <tr>
+                                <td>xxxl</td>
+                                <td>118-122</td>
+                                <td>54</td>
+                                <td>18½</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>xxxl</td>
+                                <td>118-122</td>
+                                <td>54</td>
+                                <td>19</td>
+                                <td>48</td>
+                            </tr>
+                        </table>
+                        </ui:fragment>
+                        <!--КОСТЮМЫ-->
+
+                        <ui:fragment rendered="#{itemPageBean.item.category.parent.title == 'Костюмы'}">
+                            <h3>Костюмы</h3>
+                            <table id="table-size-kostym" class="size_table">
+                            <th>международные размеры</th>
+                            <th>обхват талии, см</th>
+                            <th>российский Размер</th>
+                            <tr>
+                                <td>xxs</td>
+                                <td>76</td>
+                                <td>44</td>
+                            </tr>
+                            <tr>
+                                <td>xs</td>
+                                <td>80</td>
+                                <td>46</td>
+                            </tr>
+                            <tr>
+                                <td>s</td>
+                                <td>86</td>
+                                <td>48</td>
+                            </tr>
+                            <tr>
+                                <td>m</td>
+                                <td>92</td>
+                                <td>50</td>
+                            </tr>
+                            <tr>
+                                <td>l</td>
+                                <td>96</td>
+                                <td>52</td>
+                            </tr>
+                            <tr>
+                                <td>x</td>
+                                <td>100</td>
+                                <td>54</td>
+                            </tr>
+                            <tr>
+                                <td>xxl</td>
+                                <td>106</td>
+                                <td>56</td>
+                            </tr>
+                            <tr>
+                                <td>xxxl</td>
+                                <td>112</td>
+                                <td>58</td>
+                            </tr>
+                            <tr>
+                                <td>4xl</td>
+                                <td>120</td>
+                                <td>60</td>
+                            </tr>
+                        </table>
+                        </ui:fragment>
+                        <!--РОСТОВАЯ ГРАДАЦИЯ ОДЕЖДЫ-->
+                        <h3>Ростовая градация одежды</h3>
+                        <table id="table-size-rost" class="size_table">
+                            <th>ростовой размер</th>
+                            <th>рост, см</th>
+                            <tr>
+                                <td>ii</td>
+                                <td>164-170</td>
+                            </tr>
+                            <tr>
+                                <td>iii</td>
+                                <td>170-176</td>
+                            </tr>
+                            <tr>
+                                <td>iv</td>
+                                <td>176-182</td>
+                            </tr>
+                            <tr>
+                                <td>v</td>
+                                <td>182-188</td>
+                            </tr>
+                            <tr>
+                                <td>vi</td>
+                                <td>188-194</td>
+                            </tr>
+                            <tr>
+                                <td>vii</td>
+                                <td>194-200</td>
+                            </tr>
+                            <tr>
+                                <td>viii</td>
+                                <td>200-206</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </ui:define>
+    <ui:define name="footerLibraries">
+        <h:outputScript library="js" name="jquery.elevateZoom-3.0.8.min.js" />
+        <h:outputScript library="js" name="jquery.fancybox.pack.js" />
+        <!--<h:outputScript library="js" name="item_page.js" />-->
+
+        <script type="text/javascript">
+            $( document ).ready(function() {
+                console.log("Init ready");
+                $("#img_01").elevateZoom({gallery:'gallery_01', cursor: 'pointer', galleryActiveClass: 'active', scrollZoom:true, lenszoom:true, lensSize:10});
+                //pass the images to Fancybox
+                $("#img_01").bind("click", function(e) {
+                    var ez =  $('#img_01').data('elevateZoom');
+                    $.fancybox(ez.getGalleryList());
+//                    console.log("Clicked");
+                    return false;
+                });
+                $(".scale-photo").bind("click", function(e) {
+                    var ez =  $('#img_01').data('elevateZoom');
+                    $.fancybox(ez.getGalleryList());
+                    return false;
+                });
+//                console.log("Init finished");
+                // for label on button
+                $('.add_to_basket').on('click', function(){
+                    $('.add_to_basket').html('<span class="ui-button-text ui-c"><i class="fa fa-shopping-cart"></i> Товар добавлен</span>');
+                    setTimeout(function () {
+                        $('.add_to_basket').html('<span class="ui-button-text ui-c"><i class="fa fa-shopping-cart"></i> Добавить в корзину</span>');
+                    }, 2000);
+                });
+
+            });
+
+        </script>
+    </ui:define>
+</ui:composition>
+</h:body>
+</html>

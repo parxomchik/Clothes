@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+<ui:composition template="../../templates/admin/BasicAdminTemplate.xhtml">
+<ui:define name="title"><title>Pages edit : #{constantsBean.projectName}</title></ui:define>
+    <ui:define name="sidebar">
+        <ui:include src="sidebar.xhtml"/>
+    </ui:define>
+<ui:define name="content">
+<!-- /.modal -->
+<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+<!-- BEGIN PAGE HEADER-->
+<!--<h3 class="page-title">-->
+    <!--Dish edit-->
+<!--</h3>-->
+<!-- BEGIN PAGE CONTENT-->
+<div class="row">
+<div class="col-md-12">
+<h:form id="form" enctype="multipart/form-data">
+<p:growl id="msgs" showDetail="true" life="1500" autoUpdate="true" />
+<!-- BEGIN SAMPLE TABLE PORTLET-->
+<div class="portlet box green">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="fa fa-cogs"></i>Pages edit
+    </div>
+    <div class="tools">
+        <h:commandLink action="#{pageBean.save}" style="color:#fff" styleClass="glyphicon glyphicon-floppy-disk" />
+    </div>
+</div>
+<div class="portlet-body flip-scroll">
+<p:dataTable id="dataTable" var="page" value="#{pageBean.pageComponents}" editable="true" editMode="cell"
+        tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric" rowIndexVar="index">
+
+    <p:column headerText="Id" style="width: 1%; text-align: center">
+        <h:outputText value="#{page.id}" />
+    </p:column>
+
+    <p:column headerText="Title" style="width: 5%; padding: 5px"  >
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{page.title}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{page.title}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Meta-Desc" style="width: 9%; padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{page.metaDesc}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{page.metaDesc}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Meta-Keywords" style="width: 9%; padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{page.metaKeywords}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{page.metaKeywords}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Components" style="width: 6%; text-align: center">
+        <p:commandButton action="#{pageBean.selectPageForEdit(page.id)}" value="Edit" align="middle" oncomplete="$('#componentsModal').modal('toggle')" >
+            <f:ajax render="form:componentsModalPanel" />
+        </p:commandButton>
+    </p:column>
+
+</p:dataTable>
+
+</div>
+</div>
+    <!-- Components edit Modal -->
+    <div class="modal fade" id="componentsModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close " data-dismiss="modal" aria-label="Close" onclick="">-->
+                        <!--<span aria-hidden="false">&times;</span>-->
+                    <!--</button>-->
+                    <!--<h:commandButton value="Close" action="#{pageComponentModalEdit.save}" styleClass="btn btn-default" >-->
+                        <!--&lt;!&ndash;<f:ajax execute="componentsModalPanel" render="componentsModalPanel" />&ndash;&gt;-->
+                    <!--</h:commandButton>-->
+                    <h4 class="modal-title" id="myModalLabel3">Componets Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <h:panelGroup id="componentsModalPanel">
+                        <p:dataList id="componentsRepeat" value="#{pageComponentModalEdit.components}" var="componentTo" rowIndexVar="index" styleClass="dataList">
+                            <!--#{componentTo}-->
+                            <div class="form-group">
+                                <label>#{componentTo.fieldDesc}</label>
+                                <ui:fragment id="richTextFieldFragment" rendered="#{componentTo.richTextField}">
+                                    <h:panelGroup id="renderBlock" layout="block">
+                                        <h:outputText value="#{pageComponentModalEdit.getTextAsPlainText(componentTo.propertyForPlainComponents['content'])}" escape="true" id = "newDesc" styleClass="descriptionOverflow form-control"/>
+                                        <p:remoteCommand name="updateTableDesc" process="editor" update="form:componentsRepeat" />
+                                        <p:overlayPanel id="descPanel"  for="newDesc" showEvent="click" hideEvent="mousedown" showCloseIcon="true" dynamic="true" onShow="" >
+                                            <p:editor id="editor" widgetVar="editorWidget"  value="#{componentTo.propertyForPlainComponents['content']}" width="600" maxlength="10000" onchange="var updateNewDesc = function () {
+                                                var index = '#{index}';
+                                                console.log(index);
+                                                PrimeFaces.widgets['editorWidget'].saveHTML();
+                                                PrimeFaces.ab({
+                                                    source:'',
+                                                    f: 'form',
+                                                    process: 'form:componentsRepeat:' + index + ':renderBlock',
+                                                    update: 'form:componentsRepeat:' + index + ':newDesc',
+                                                    pa: arguments[0]
+                                                });
+                                            };
+                                            updateNewDesc()" />
+                                        </p:overlayPanel>
+                                    </h:panelGroup>
+                                </ui:fragment>
+                                <ui:fragment id="imageFragment" rendered="#{componentTo.imageLink}">
+                                    <table class="table table-bordered table-striped table-condensed flip-content">
+
+                                        <tr class="numeric">
+                                            <td style="width: 150px; text-align: center">
+                                                <img src="/rest/image/plainComponent/#{componentTo.id}/blob/content/#{pageComponentModalEdit.now}" alt="No image" style="max-width: 150px"/>
+                                                <br/>
+                                                #{componentTo.propertyForPlainComponents['fileName']}
+                                            </td>
+                                            <!--<td>-->
+                                                <!--#{componentTo.propertyForPlainComponents['fileName']}-->
+                                            <!--</td>-->
+                                            <td style="width: auto">
+                                                <p:fileUpload fileUploadListener="#{pageComponentModalEdit.upload}" ajax="true" auto="true" style="margin-bottom: 5px; max-width: 100%" update=":form:msgs, form:componentsModalPanel">
+                                                    <f:attribute name="componentId" value="#{componentTo.id}" />
+                                                    <f:attribute name="fileName" value="true" />
+                                                    <f:attribute name="uploadKey" value="content" />
+                                                </p:fileUpload>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <p:inputText styleClass="form-control" value="#{componentTo.propertyForPlainComponents['link']}" placeholder="Link"/>
+                                </ui:fragment>
+
+                                <ui:fragment id="sliderFragment" rendered="#{componentTo.slider}">
+                                    <table class="table table-bordered table-striped table-condensed flip-content">
+                                        <ui:param name="images" value="#{componentTo.blobPropertyForPlainComponentsKeysAsList}" />
+                                        <ui:repeat value="#{images}" var="imageKey" >
+                                            <tr class="numeric">
+                                                <td style="width: 150px; text-align: center">
+                                                    <img src="/rest/image/plainComponent/#{componentTo.id}/blob/#{imageKey}/#{pageComponentModalEdit.now}" alt="No image" style="max-width: 150px"/>
+                                                    <br/>
+                                                    #{componentTo.propertyForPlainComponents['fileName']}
+                                                </td>
+                                                <!--<td>-->
+                                                <!--#{componentTo.propertyForPlainComponents['fileName']}-->
+                                                <!--</td>-->
+                                                <td style="width: auto">
+                                                    <p:fileUpload fileUploadListener="#{pageComponentModalEdit.upload}" ajax="true" auto="true" style="margin-bottom: 5px; max-width: 100%" update=":form:msgs, form:componentsModalPanel">
+                                                        <f:attribute name="componentId" value="#{componentTo.id}" />
+                                                        <f:attribute name="fileName" value="false" />
+                                                        <f:attribute name="uploadKey" value="#{imageKey}" />
+                                                    </p:fileUpload>
+                                                </td>
+                                            </tr>
+                                            <tr class="numeric">
+                                                <td colspan="2">
+                                                    <ui:param name="linkIndex" value="#{'link'}#{images.indexOf(imageKey)}" />
+                                                    <p:inputText styleClass="form-control" value="#{componentTo.propertyForPlainComponents[linkIndex]}" placeholder="Link"/>
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+
+                                    </table>
+                                </ui:fragment>
+                            </div>
+                            <hr/>
+                        </p:dataList>
+                    </h:panelGroup>
+                </div>
+                <div class="modal-footer">
+                    <p:commandButton action="#{pageComponentModalEdit.cancel}" value="Cancel" styleClass="btn btn-default" oncomplete="$('#componentsModal').modal('toggle')">
+                        <f:ajax execute="componentsModalPanel" render="msgs descPanel editor componentsRepeat" />
+                    </p:commandButton>
+
+                    <p:commandButton action="#{pageComponentModalEdit.save}" value="Save changes" styleClass="btn btn-default" oncomplete="$('#componentsModal').modal('toggle')">
+                        <f:ajax execute="componentsModalPanel" render="msgs descPanel editor componentsRepeat" />
+                    </p:commandButton>
+                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Save changes</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</h:form>
+</div>
+</div>
+</ui:define>
+</ui:composition>
+</h:body>
+</html>

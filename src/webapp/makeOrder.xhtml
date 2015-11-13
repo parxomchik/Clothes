@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+    <f:viewAction action="#{makeOrderPageBean.init}" />
+</f:metadata>
+<h:body>
+<ui:composition template="templates/front/BasicTemplate.xhtml">
+    <ui:define name = "title"><title>Zermon</title></ui:define>
+    <ui:define name = "content">
+
+        <!-- Begin page content -->
+        <div id="content" class="col-xs-12" style="padding-bottom:20px">
+            <div class="col-md-6"><h3 class="inline_block">Оформление заказа: </h3>
+                <h:link type="button" outcome="index" styleClass="btn btn-warning pull-right margin_top_15"
+                        value="Продолжить покупки" style="margin-left: 10px; display: inherit; margin-right: auto" rendered="#{not makeOrderPageBean.orderPrepared}"/>
+                <ui:fragment rendered="#{!loginBean.linked}">
+                    <a data-toggle="modal" data-target=".register_modal" class="btn btn-warning pull-right margin_top_15 color_fff">Войти</a>
+                </ui:fragment>
+            </div>
+            <div class="col-md-6 text-center hidden-xs hidden-sm font_size_20 margin_top_20 margin_bottom_10">
+                <span>О заказе: </span>
+        </div>
+            <h:form id="mainForm">
+
+
+            <div class="col-md-6">
+                <h:panelGroup id="userInfoBlock" layout="block">
+                    <div class="form-group">
+                        <p:inputText id="nameRField" value="#{makeOrderPageBean.user.name}" class="form-control"
+                                     placeholder="Введите Фамилию и Имя" required="true" requiredMessage="Введите Фамилию и Имя" disabled="#{makeOrderPageBean.orderPrepared}">
+                        </p:inputText>
+                        <h:message id="nameRFieldMessage" for="nameRField" styleClass="message-red" />
+                    </div>
+
+                    <!--<div class="form-group">-->
+                        <!--<p:inputText id="countryRField" value="#{makeOrderPageBean.user.country}" class="form-control"-->
+                                     <!--placeholder="Страна" required="true" requiredMessage="Страна" disabled="#{makeOrderPageBean.orderPrepared}">-->
+                        <!--</p:inputText>-->
+                        <!--<h:message id="countryRFieldMessage" for="countryRField" styleClass="message-red" />-->
+                    <!--</div>-->
+
+                    <!--<div class="form-group">-->
+                        <!--<p:inputText id="cityRField" value="#{makeOrderPageBean.user.city}" class="form-control"-->
+                                     <!--placeholder="Область, Город" required="true" requiredMessage="Область, Город" disabled="#{makeOrderPageBean.orderPrepared}">-->
+                        <!--</p:inputText>-->
+                        <!--<h:message id="cityRFieldMessage" for="cityRField" styleClass="message-red" />-->
+                    <!--</div>-->
+
+                    <!--<div class="form-group">-->
+                        <!--<p:inputText id="indexRField" value="#{makeOrderPageBean.user.postIndex}" class="form-control"-->
+                                     <!--placeholder="Индекс" required="true" requiredMessage="Индекс" disabled="#{makeOrderPageBean.orderPrepared}">-->
+                        <!--</p:inputText>-->
+                        <!--<h:message id="indexRFieldMessage" for="indexRField" styleClass="message-red" />-->
+                    <!--</div>-->
+
+                    <!--<div class="form-group">-->
+                        <!--<p:inputText id="addressRField" value="#{makeOrderPageBean.user.street}" class="form-control"-->
+                                     <!--placeholder="Адрес" required="true" requiredMessage="Адрес" disabled="#{makeOrderPageBean.orderPrepared}">-->
+                        <!--</p:inputText>-->
+                        <!--<h:message id="addressRFieldMessage" for="addressRField" styleClass="message-red" />-->
+                    <!--</div>-->
+
+
+                    <div class="form-group">
+                        <p:inputText id="phoneRField" value="#{makeOrderPageBean.user.phone}" class="form-control"
+                                     placeholder="Телефон" required="true" requiredMessage="Телефон" disabled="#{makeOrderPageBean.orderPrepared}">
+                        </p:inputText>
+                        <h:message id="phoneRFieldMessage" for="phoneRField" styleClass="message-red" />
+                    </div>
+
+                    <div class="form-group">
+                        <p:inputText id="emailRField" value="#{makeOrderPageBean.user.email}" class="form-control"
+                                     placeholder="Введите email" required="true" requiredMessage="Введите email" disabled="#{makeOrderPageBean.orderPrepared}">
+                            <c:if test="#{not loginBean.linked}" >
+                                <f:validator binding="#{emailValidator}" />
+                            </c:if>
+                        </p:inputText>
+                        <h:message id="emailRFieldMessage" for="emailRField" styleClass="message-red" />
+                    </div>
+                </h:panelGroup>
+                    <div class="col-md-4 padding_fix"><p>Способ доставки:</p></div>
+                    <h:panelGroup id="deliveryBlock" layout="block" >
+                        <div class="col-md-8">
+                            <h:selectOneMenu id="deliveryTypeRField" value="#{makeOrderPageBean.order.deliveryType}" layout="pageDirection"
+                                              styleClass="form-control" disabled="#{makeOrderPageBean.orderPrepared}" style="margin-bottom: 10px"
+                                             required="true" requiredMessage="Выбирите способ доставки" hideNoSelectionOption="true">
+                                <f:selectItem itemLabel="Выберите способ доставки" noSelectionOption="true" />
+                                <f:selectItem itemLabel="Нова почта склад - двери" itemValue="newPostStorageDoor" />
+                                <f:selectItem itemLabel="Нова почта склад - склад" itemValue="newPostStorageStorage" />
+                                <f:selectItem itemLabel="Сторонними службами доставки" itemValue="AnotherDeliveryService" />
+                                <f:selectItem itemLabel="Курьером по Киеву" itemValue="courierInKiev" />
+                                <f:ajax event="change" render="deliveryBlock" />
+                            </h:selectOneMenu>
+                            <h:message id="deliveryTypeRFieldMessage" for="deliveryTypeRField" styleClass="message-red" />
+                            <ui:fragment rendered="#{makeOrderPageBean.order.deliveryType == 'AnotherDeliveryService'}">
+                                <div class="form-group">
+                                    <p:inputText id="serviceTitleRField" value="#{makeOrderPageBean.order.serviceTitle}" class="form-control"
+                                                 placeholder="Название службы" required="true" requiredMessage="Название службы" disabled="#{makeOrderPageBean.orderPrepared}">
+                                    </p:inputText>
+                                    <h:message id="serviceTitleRFieldMessage" for="serviceTitleRField" styleClass="message-red" />
+                                </div>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{makeOrderPageBean.order.deliveryType == 'newPostStorageDoor' or
+                                                     makeOrderPageBean.order.deliveryType == 'newPostStorageStorage' or
+                                                     makeOrderPageBean.order.deliveryType == 'AnotherDeliveryService'}">
+                                <div class="form-group">
+                                    <p:inputText id="cityRField" value="#{makeOrderPageBean.user.city}" class="form-control"
+                                                 placeholder="Область, Город" required="true" requiredMessage="Область, Город" disabled="#{makeOrderPageBean.orderPrepared}">
+                                    </p:inputText>
+                                    <h:message id="cityRFieldMessage" for="cityRField" styleClass="message-red" />
+                                </div>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{makeOrderPageBean.order.deliveryType == 'newPostStorageDoor' or makeOrderPageBean.order.deliveryType == 'courierInKiev'}">
+                                <div class="form-group">
+                                    <p:inputText id="addressRField" value="#{makeOrderPageBean.user.street}" class="form-control"
+                                                 placeholder="Улица" required="true" requiredMessage="Улица" disabled="#{makeOrderPageBean.orderPrepared}">
+                                    </p:inputText>
+                                    <h:message id="addressRFieldMessage" for="addressRField" styleClass="message-red" />
+                                </div>
+
+                                <div class="form-group">
+                                    <p:inputText id="houseRField" value="#{makeOrderPageBean.user.house}" class="form-control"
+                                                 placeholder="Дом" required="true" requiredMessage="Дом" disabled="#{makeOrderPageBean.orderPrepared}">
+                                    </p:inputText>
+                                    <h:message id="houseRFieldMessage" for="houseRField" styleClass="message-red" />
+                                </div>
+
+                                <div class="form-group">
+                                    <p:inputText id="apartmentRField" value="#{makeOrderPageBean.user.apartment}" class="form-control"
+                                                 placeholder="Офис / квартира" required="true" requiredMessage="Офис / квартира" disabled="#{makeOrderPageBean.orderPrepared}">
+                                    </p:inputText>
+                                    <h:message id="apartmentRFieldMessage" for="apartmentRField" styleClass="message-red" />
+                                </div>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{makeOrderPageBean.order.deliveryType == 'newPostStorageStorage' or makeOrderPageBean.order.deliveryType == 'AnotherDeliveryService'}">
+                                <div class="form-group">
+                                    <p:inputText id="addressOrStorageNumRField" value="#{makeOrderPageBean.order.addressOrStorageNum}" class="form-control"
+                                                 placeholder="Адрес / номер склада" required="true" requiredMessage="Адрес / номер склада" disabled="#{makeOrderPageBean.orderPrepared}">
+                                    </p:inputText>
+                                    <h:message id="addressOrStorageNumRFieldMessage" for="addressOrStorageNumRField" styleClass="message-red" />
+                                </div>
+                            </ui:fragment>
+                            <!--<h:selectOneMenu value="#{makeOrderPageBean.serviceType}" styleClass="form-control" style="margin-bottom: 15px"-->
+                                             <!--rendered="#{makeOrderPageBean.deliveryType == 'service'}" disabled="#{makeOrderPageBean.orderPrepared}">-->
+                                <!--<f:selectItem itemValue="newPost" itemLabel="Новая почта" />-->
+                                <!--<f:selectItem itemValue="Delivery" itemLabel="Деливери" />-->
+                                <!--<f:selectItem itemValue="CAT" itemLabel="САТ" />-->
+                                <!--<f:selectItem itemValue="InTime" itemLabel="Интайм" />-->
+                                <!--<f:selectItem itemValue="Another" itemLabel="Другое" />-->
+                            <!--</h:selectOneMenu>-->
+
+                        </div>
+                        <div class="col-md-12 margin_bottom_20 padding_fix">
+                            <div class="col-md-4 padding_fix">
+                                <p>Выберите способ оплаты:</p>
+                            </div>
+                            <div class="col-md-8">
+                                <h:selectOneMenu value="#{makeOrderPageBean.order.paymentType}" styleClass="form-control" disabled="#{makeOrderPageBean.orderPrepared}">
+                                    <f:selectItem itemValue="cashOnDelivery" itemLabel="Оплата при получении (наложеный платеж)" />
+                                    <f:selectItem itemValue="privateBank" itemLabel="Приват Банк" />
+                                    <f:selectItem itemValue="palPal" itemLabel="Pay Pal" itemDisabled="true" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+
+                    </h:panelGroup>
+
+            </div>
+
+
+                <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading font_size_16">Ваш заказ</div>
+                    <h:panelGroup id="makeOrderForm" layout="block">
+                        <div class="panel-body">
+                            <c:if test="#{cartBean.onlyItems.size() == 0}">
+                                Ничего тут нет
+                            </c:if>
+                            <ui:repeat id="itemsRepeate" value="#{cartBean.onlyItems}" var="item">
+                                    <ul class="media-list">
+                                        <li class="media">
+                                            <p:commandButton rendered="#{not makeOrderPageBean.orderPrepared}" styleClass="close" style="margin-right: -20px"
+                                                             type="button" value="&lt;span aria-hidden='true'&gt;&times;&lt;/span&gt;" escape="false" >
+                                                <p:ajax event="click" listener="#{cartBean.removeFromCart(item.id)}" execute="cartItemBlock#{item.id}" update=":mainForm :cartModalForm :cartButtonForm" />
+                                            </p:commandButton>
+                                            <!--<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                                            <div class="media-left">
+
+                                                <!--<a href="#">-->
+                                                <h:link outcome="item">
+                                                    <f:param name="id" value="#{item.id}"  />
+                                                    <img data-src="holder.js/150x150/sky" class="media-object" src="/rest/image/item/#{item.id}/small" alt="..." height="150"/>
+                                                </h:link>
+                                                <!--</a>-->
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="col-md-12"><h4 class="media-heading">#{item.title}</h4></div>
+                                                <div class="col-md-12">
+                                                    <p>Размер #{item.packSize}
+                                                        <ui:param name="isSale" value="#{itemUtil.isSale(item.saleValue, item.saleStart, item.saleEnd)}" />
+                                                        <ui:fragment rendered="#{not isSale}">
+                                                            <span class="pull-right margin_right_15 item_price">
+                                                                #{frontSiteSettings.formatPrice(item.packPrice)}
+                                                            </span>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{isSale}">
+                                                            <span class="pull-right margin_right_15 item_price">
+                                                                <span style="text-decoration: line-through" class="text-muted">
+                                                                    #{frontSiteSettings.formatPrice(item.packPrice)}
+                                                                </span>
+                                                                #{frontSiteSettings.formatPrice(cartBean.calculatePriceByItem(item))}
+                                                            </span>
+                                                        </ui:fragment>
+                                                    </p>
+
+                                                    <p>
+                                                        <label class="label_item_count" for="item_count">Количество: </label>
+                                                        <!--<input type="number" class="item_count" id="item_count2" name="item_count" value="1" min="1" max="10" step="1"></input>-->
+                                                        <p:inputText  disabled="#{makeOrderPageBean.orderPrepared}" converter="javax.faces.Integer" value="#{cartBean.items[item]}" type="number" styleClass="item_count" id="item_count" name="item_count" min="1" max="1000" step="1" >
+                                                            <p:ajax event="change" execute="@this" update=":mainForm:totalPrice :cartModalForm" />
+                                                        </p:inputText>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                            </ui:repeat>
+                        </div>
+                        <div class="modal-footer">
+                            <ui:param name="userDiscount" value="#{cartBean.sale}" />
+                            <ui:fragment rendered="#{userDiscount > 0}">
+                                <strong>Скидка:
+                                <h:outputText id="discount" value="#{userDiscount}%"/></strong>
+                                <br/>
+                            </ui:fragment>
+                            <ui:fragment id="totalPrice">
+                                <strong>Итого:
+                                <h:outputText style="text-decoration: line-through"
+                                              value="#{frontSiteSettings.formatPrice(cartBean.calculateTotalPriceWithoutDiscount())} " rendered="#{cartBean.userDiscount > 0}"/>
+                                <h:outputText value="#{frontSiteSettings.formatPrice(cartBean.calculateTotalPrice())}"/>
+                                </strong>
+                            </ui:fragment>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                <h:panelGroup id="buttonsBlock" layout="block" rendered="#{cartBean.onlyItems.size() > 0}">
+
+
+                    <p:commandButton styleClass="btn btn-warning center-block margin_bottom_10" value="Оформить заказ" style="display: inherit; margin-right: auto" rendered="#{not makeOrderPageBean.orderPrepared}">
+                        <p:ajax event="click" listener="#{makeOrderPageBean.prepareOrder}" process="userInfoBlock, deliveryBlock, @this"  update="userInfoBlock, buttonsBlock, deliveryBlock, makeOrderForm, :cartButtonForm" />
+                    </p:commandButton>
+
+                    <ui:fragment rendered="#{makeOrderPageBean.orderPrepared}">
+                        <div class="row center-block confirm_order_block">
+                            <div class="col-md-3"/>
+                            <div class="col-md-3">
+                                <p:commandButton styleClass="btn btn-warning center-block margin_bottom_10" value="Редактировать" style="display: inherit; margin-right: auto">
+                                    <p:ajax event="click" listener="#{makeOrderPageBean.editOrder}" process="userInfoBlock, deliveryBlock, @this"  update="userInfoBlock, buttonsBlock, deliveryBlock, makeOrderForm, :cartButtonForm" />
+                                </p:commandButton>
+                            </div>
+
+                            <div class="col-md-3">
+                                <p:commandButton actionListener="#{makeOrderPageBean.payOrder}" styleClass="btn btn-success center-block margin_bottom_10"
+                                                 value="#{makeOrderPageBean.order.paymentType == 'cashOnDelivery' ? 'Подтвердить' : 'Подтвердить'}"
+                                                 style="display: inherit; margin-right: auto" onclick="$('#successModal').modal('show');">
+                                    <f:ajax execute="@form" render="@none" />
+                                </p:commandButton>
+                            </div>
+                            <div class="col-md-3"/>
+                        </div>
+
+                    </ui:fragment>
+                </h:panelGroup>
+
+            </div>
+
+                <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.replace('index.xhtml')"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Статус</h4>
+                            </div>
+                            <div class="modal-body">
+                                    Заказ будет обработан в ближайшее время
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $('#successModal').on('hidden.bs.modal', function () {
+                        window.location.replace('index.xhtml')
+                    })
+                </script>
+            </h:form>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+</h:body>
+</html>

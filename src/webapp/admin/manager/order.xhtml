@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+<ui:composition template="../../templates/admin/BasicAdminTemplate.xhtml">
+<ui:define name="title"><title>Orders : #{constantsBean.projectName}</title></ui:define>
+    <ui:define name="sidebar">
+        <ui:include src="sidebar.xhtml"/>
+    </ui:define>
+<ui:define name="content">
+<!-- /.modal -->
+<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+<!-- BEGIN PAGE HEADER-->
+<!--<h3 class="page-title">-->
+    <!--Dish edit-->
+<!--</h3>-->
+<!-- BEGIN PAGE CONTENT-->
+<div class="row">
+<div class="col-md-12">
+<h:form id="form" enctype="multipart/form-data">
+<p:growl id="msgs" showDetail="true" life="1500" />
+<!-- BEGIN SAMPLE TABLE PORTLET-->
+<div class="portlet box green">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="fa fa-cogs"></i>Orders
+    </div>
+    <div class="tools">
+        <h:commandLink action="#{orderBean.reload}"  styleClass="reload" />
+    </div>
+</div>
+<div class="portlet-body flip-scroll">
+<p:dataTable var="order" value="#{orderBean.orders}"
+        tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric">
+
+    <p:column headerText="Id" style="width: 3%; text-align: center">
+        <h:outputText value="#{order.id}" />
+    </p:column>
+
+    <p:column headerText="Date" style="width: 10%; padding: 5px">
+        <h:outputText value="#{order.dateAdd}" styleClass="" >
+            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+        </h:outputText>
+    </p:column>
+
+    <p:column headerText="Items" style="width: 50%; padding: 5px"  >
+        <p:dataTable var="orderDish" value="#{order.orderItems}"
+                     tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric">
+            <p:column headerText="Articul" style="width: 5%; padding: 5px; text-align: center"  >
+                <h:outputText value="#{orderDish.item.productCode}" />
+            </p:column>
+
+            <p:column headerText="Title" style="width: 20%; padding: 5px"  >
+                <!--<h:outputText value="#{orderDish.item.title}" />-->
+                <h:link outcome="/app/item" value="#{orderDish.item.title}" style="text-decoration: underline">
+                    <f:param name="id" value="#{orderDish.item.id}"/>
+                </h:link>
+            </p:column>
+
+            <p:column headerText="Category" style="width: 7%; padding: 5px"  >
+                <h:outputText value="#{orderDish.item.category.title}" />
+            </p:column>
+
+            <p:column headerText="Price/Item" style="width: 5%; padding: 5px"  >
+                <h:outputText value="#{orderDish.price}" >
+                    <f:convertNumber pattern="0.00"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Count" style="width: 3%; padding: 5px; text-align: center" >
+                <h:outputText value="#{orderDish.count}" />
+            </p:column>
+        </p:dataTable>
+    </p:column>
+
+    <p:column headerText="UserInfo" style="padding: 5px; ">
+        <h:outputText value="Имя: #{order.user.name}" /><br/>
+        <h:outputText value="Телефон: #{order.user.phone}" /><br/>
+        <h:outputText value="Тип доставки: Нова почта склад - двери" rendered="#{order.deliveryType == 'newPostStorageDoor'}" />
+        <h:outputText value="Тип доставки: Нова почта склад - склад" rendered="#{order.deliveryType == 'newPostStorageStorage'}" />
+        <h:outputText value="Тип доставки: Сторонними службами доставки" rendered="#{order.deliveryType == 'AnotherDeliveryService'}" />
+        <h:outputText value="Тип доставки: Курьером по Киеву" rendered="#{order.deliveryType == 'courierInKiev'}" />
+        <br/>
+
+        <ui:fragment rendered="#{order.deliveryType == 'AnotherDeliveryService'}">
+            Название службы: #{order.serviceTitle}
+            <br/>
+        </ui:fragment>
+        <ui:fragment rendered="#{order.deliveryType == 'newPostStorageDoor' or order.deliveryType == 'newPostStorageStorage' or order.deliveryType == 'AnotherDeliveryService'}">
+            Область, Город: #{order.user.city}
+            <br/>
+        </ui:fragment>
+        <ui:fragment rendered="#{order.deliveryType == 'newPostStorageDoor' or order.deliveryType == 'courierInKiev'}">
+            Улица: #{order.user.street}
+            <br/>
+            Дом: #{order.user.house}
+            <br/>
+            Офис / квартира: #{order.user.apartment}
+            <br/>
+        </ui:fragment>
+        <ui:fragment rendered="#{order.deliveryType == 'newPostStorageStorage' or order.deliveryType == 'AnotherDeliveryService'}">
+            Адрес / номер склада: #{order.addressOrStorageNum}
+            <br/>
+        </ui:fragment>
+    </p:column>
+
+    <p:column headerText="Total price" style="padding: 5px; width: 3%">
+        <h:outputText value="#{order.total}" />
+    </p:column>
+
+    <p:column headerText="Status" style="padding: 5px; width: 7%">
+        <h:outputText value="#{order.status}" styleClass="descriptionOverflow" />
+    </p:column>
+
+    <p:column headerText="Op" style="padding: 5px; width: 3%">
+        <h:commandLink action="#{orderBean.markAsToDelivery(order.id)}" rendered="#{order.status == 'ordered'}">
+            <span class="glyphicon glyphicon-folder-close" style="color: #333" />
+        </h:commandLink>
+        <h:commandLink action="#{orderBean.markAsOrdered(order.id)}" rendered="#{order.status == 'toPayment'}" >
+            <span class="glyphicon glyphicon-download-alt" style="color: #333" />
+        </h:commandLink>
+            <!--<span class="glyphicon glyphicon-ok" style="color: #333" />-->
+    </p:column>
+
+</p:dataTable>
+</div>
+</div>
+</h:form>
+</div>
+</div>
+</ui:define>
+</ui:composition>
+</h:body>
+</html>

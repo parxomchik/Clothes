@@ -1,0 +1,9 @@
+.idea
+copy.bat
+copy2.bat
+out
+target
+clothes.iml
+src/webapp/WEB-INF/dataSource.xml
+src/webapp/resources/assets/global/plugins/bootstrap
+src/webapp/resources/assets/global/plugins/simple-line-icons

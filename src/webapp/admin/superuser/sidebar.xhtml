@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<body>
+<ui:composition>
+    <h:form>
+<!-- BEGIN SIDEBAR -->
+<div class="page-sidebar-wrapper">
+
+<div class="page-sidebar navbar-collapse collapse">
+
+<ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+<!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
+<li class="sidebar-toggler-wrapper">
+    <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+    <div class="sidebar-toggler" style="margin-bottom: 10px;">
+    </div>
+    <!-- END SIDEBAR TOGGLER BUTTON -->
+</li>
+<li class="#{view.viewId.endsWith('/customerEdit.xhtml') ? 'active open' : '' }">
+    <h:link outcome="customerEdit" >
+        <i class="icon-briefcase"></i>
+        <span class="title">Customer edit</span>
+        <span class="selected"></span>
+        <span class="arrow"></span>
+    </h:link>
+</li>
+
+<li class="#{view.viewId.endsWith('/systemUserEdit.xhtml') ? 'active open' : '' }">
+    <h:link outcome="systemUserEdit" >
+        <i class="icon-briefcase"></i>
+        <span class="title">System user edit</span>
+        <span class="selected"></span>
+        <span class="arrow"></span>
+    </h:link>
+</li>
+
+<li class="#{view.viewId.endsWith('/settings.xhtml') ? 'active open' : '' }">
+    <h:link outcome="settings" >
+        <i class="icon-briefcase"></i>
+        <span class="title">Settings</span>
+        <span class="selected"></span>
+        <span class="arrow"></span>
+    </h:link>
+</li>
+
+</ul>
+<!-- END SIDEBAR MENU -->
+</div>
+</div>
+<!-- END SIDEBAR -->
+    </h:form>
+</ui:composition>
+</body>
+</html>

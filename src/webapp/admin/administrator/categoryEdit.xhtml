@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+<ui:composition template="../../templates/admin/BasicAdminTemplate.xhtml">
+<ui:define name="title"><title>Categories edit : #{constantsBean.projectName}</title></ui:define>
+    <ui:define name="sidebar">
+        <ui:include src="sidebar.xhtml"/>
+    </ui:define>
+<ui:define name="content">
+<!-- /.modal -->
+<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+<!-- BEGIN PAGE HEADER-->
+<!--<h3 class="page-title">-->
+    <!--Dish edit-->
+<!--</h3>-->
+<!-- BEGIN PAGE CONTENT-->
+<div class="row">
+<div class="col-md-12">
+<h:form id="form" enctype="multipart/form-data">
+<p:growl id="msgs" showDetail="true" life="1500" />
+<!-- BEGIN SAMPLE TABLE PORTLET-->
+<div class="portlet box green">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="fa fa-cogs"></i>Categories edit
+    </div>
+    <div class="tools">
+        <h:commandLink action="#{categoryEditBean.save}"  style="color:#fff" styleClass="glyphicon glyphicon-floppy-disk" />
+        <!--<a href="#portlet-config" data-toggle="modal" class="config">-->
+        <!--</a>-->
+        <h:commandLink action="#{categoryEditBean.reload}"  styleClass="reload" />
+        <!--<a href="javascript:;" class="reload">-->
+        <!--</a>-->
+        <h:commandLink action="#{categoryEditBean.addNew}"  styleClass="glyphicon glyphicon-plus" style="color: #fff; margin-top: -9px;" />
+    </div>
+</div>
+<div class="portlet-body flip-scroll">
+<p:dataTable var="category" value="#{categoryEditBean.categories}" draggableRows="true" editable="true" editMode="cell"
+        tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric">
+    <p:ajax event="rowReorder" listener="#{categoryEditBean.onRowReorder}" update=":form:msgs" globalOnly="true" />
+    <!--<f:facet name="header">-->
+        <!--Dishes-->
+    <!--</f:facet>-->
+    <p:column headerText="Id" style="width: 3%; text-align: center">
+        <h:outputText value="#{category.id}" />
+    </p:column>
+
+    <p:column headerText="Title" style="width: 15%; padding: 5px"  >
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{category.title}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{category.title}" style="width:96%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Description" style="padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{category.description}" styleClass="descriptionOverflow" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{category.description}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Dropbox" style="width: 15%; padding: 5px"  >
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{category.dropbox}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{category.dropbox}" style="width:96%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column id="parentCol" headerText="Parent" style="width: 8%; text-align: center">
+        <h:selectOneMenu value="#{category.parent}" style="width:96%" converter="#{categoryConverter}" >
+            <f:selectItems value="#{categoryEditBean.getAvailableCategories(category.orderId)}"  var="cat" itemLabel="#{cat.title}" itemValue="#{cat}"
+                           itemDisabled="#{(cat.equals(category) || (cat.parent != null &amp;&amp; cat.id != -1)) &amp;&amp; cat.title != null }" />
+        </h:selectOneMenu>
+    </p:column>
+
+    <p:column headerText="Image" style="width: 4%; text-align: center" >
+        <label class="inputIcon">
+            <span class="glyphicon glyphicon-plus" />
+            <p:fileUpload fileUploadListener="#{categoryEditBean.upload}" ajax="true" auto="true" style="position: absolute" update=":form:msgs">
+                <f:attribute name="categoryId" value="#{category.id}" />
+            </p:fileUpload>
+        </label>
+        <label class="inputIcon">
+            <span class="glyphicon glyphicon-remove" />
+            <h:commandButton action="#{categoryEditBean.removeImage(category.id)}" />
+        </label>
+    </p:column>
+
+    <p:column headerText="Active" style="width: 4%; text-align: center">
+        <h:selectBooleanCheckbox value="#{category.active}" align="middle" />
+    </p:column>
+
+    <p:column headerText="Filter" style="width: 5%; text-align: center">
+        <p:commandButton action="#{categoryEditBean.selectCategory(category.id)}" value="Edit" align="middle" oncomplete="$('#myModal').modal('toggle')" >
+            <f:ajax render="form:modal" />
+        </p:commandButton>
+    </p:column>
+</p:dataTable>
+</div>
+</div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="false">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Filter Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <h:panelGroup id="modal">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="portlet box green-meadow">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class="fa fa-cogs"></i>Attributes Edit
+                                            </div>
+                                            <div class="tools">
+                                                <h:commandLink action="#{categoryModalEditBean.saveAttributes}"  styleClass="collapse" >
+                                                    <f:ajax render="form:msgs form:modal" />
+                                                </h:commandLink>
+                                                <h:commandLink action="#{categoryModalEditBean.addNewAttribute}"  styleClass="glyphicon glyphicon-plus" style="color: #fff; margin-top: -9px;" >
+                                                    <f:ajax render="form:modal" />
+                                                </h:commandLink>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body flip-scroll">
+                                    <p:dataTable var="attribute" value="#{categoryModalEditBean.attributes}" editable="true" editMode="cell"
+                                                 tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric" rowIndexVar="index">
+                                        <p:column headerText="Attribute" style="width: 15%; padding: 5px"  >
+                                            <p:cellEditor>
+                                                <f:facet name="output"><h:outputText value="#{attribute.title}" /></f:facet>
+                                                <f:facet name="input"><h:inputText value="#{attribute.title}" style="color: #000000" /></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="" style="width:3px; text-align: center; padding: 5px">
+                                            <label class="inputIcon">
+                                                <span class="glyphicon glyphicon-remove" />
+                                                <p:commandButton value="" styleClass="button-prime-fix" action="#{categoryModalEditBean.removeAttribute(attribute.id)}" >
+                                                    <f:ajax render=":msgs form:modal" />
+                                                    <p:confirm header="Confirm" message="Are you sure?" icon="ui-icon-alert" />
+                                                </p:commandButton>
+
+                                            </label>
+                                        </p:column>
+
+                                        <p:column style="width: 2px; text-align: center" >
+                                            <h:panelGroup rendered="#{attribute.id == categoryModalEditBean.selectedAttributeId}">
+                                                <label class="inputIcon" >
+                                                    <span class="glyphicon glyphicon-check" />
+                                                </label>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{attribute.id != categoryModalEditBean.selectedAttributeId}">
+                                                <label class="inputIcon" >
+                                                    <span class="glyphicon glyphicon-forward" />
+                                                    <h:commandButton action="#{categoryModalEditBean.onRowSelect(index)}" value="" align="middle" >
+                                                        <f:ajax render="form:modal" />
+                                                    </h:commandButton>
+                                                </label>
+                                            </h:panelGroup>
+
+                                        </p:column>
+                                    </p:dataTable>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <h:panelGroup id="attributes">
+                                        <div class="portlet box green-sharp">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-cogs"></i>Properties Edit
+                                                </div>
+                                                <div class="tools">
+                                                    <h:commandLink action="#{categoryModalEditBean.saveProperties}"  styleClass="collapse" >
+                                                        <f:ajax render="form:msgs form:modal" />
+                                                    </h:commandLink>
+                                                    <h:commandLink action="#{categoryModalEditBean.addNewProperty}"  styleClass="glyphicon glyphicon-plus" style="color: #fff; margin-top: -9px;" >
+                                                        <f:ajax render="form:modal" />
+                                                    </h:commandLink>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body flip-scroll">
+                                                <p:dataTable var="property" value="#{categoryModalEditBean.properties}" editable="true" editMode="cell"
+                                                             tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric">
+                                                    <p:column headerText="Property" style="padding: 5px; height: 25px"  >
+                                                        <p:cellEditor>
+                                                            <f:facet name="output"><h:outputText value="#{property.title}" /></f:facet>
+                                                            <f:facet name="input"><h:inputText value="#{property.title}" /></f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>
+
+                                                    <p:column headerText="" style="width:25px; text-align: center; padding: 5px">
+                                                        <label class="inputIcon">
+                                                            <span class="glyphicon glyphicon-remove" />
+                                                            <p:commandButton value="" styleClass="button-prime-fix" action="#{categoryModalEditBean.removeProperty(property.id)}" >
+                                                                <f:ajax render=":msgs form:modal" />
+                                                                <p:confirm header="Confirm" message="Are you sure?" icon="ui-icon-alert" />
+                                                            </p:commandButton>
+
+                                                        </label>
+                                                    </p:column>
+
+                                                    <!--<p:column style="width:2px">-->
+                                                        <!--<p:rowEditor />-->
+                                                    <!--</p:column>-->
+                                                </p:dataTable>
+                                                <p:confirmDialog global="true" showEffect="fade" appendTo="form:modal" hideEffect="explode" styleClass="confirm-override">
+                                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                </p:confirmDialog>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+
+                    </h:panelGroup>
+                </div>
+                <div class="modal-footer">
+                    <p:commandButton action="#{categoryModalEditBean.saveAll}" value="Save all" styleClass="btn btn-default" oncomplete="$('#myModal').modal('toggle')">
+                        <f:ajax execute="modal" render="msgs" />
+                    </p:commandButton>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:form>
+</div>
+</div>
+</ui:define>
+</ui:composition>
+</h:body>
+</html>

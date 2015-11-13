@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+    <f:viewParam name="id" value="#{filterPageBean.categoryId}" />
+    <f:viewAction action="#{filterPageBean.init}" />
+</f:metadata>
+<h:body>
+<ui:composition template="templates/front/BasicTemplate.xhtml">
+    <ui:define name = "title"><title>Zermon</title></ui:define>
+    <ui:define name="content">
+<h:form id="mainForm">
+        <!-- Begin page content -->
+        <div id="content" class="col-xs-12" style="padding-bottom:20px">
+            <div class="col-md-12  margin_bottom_10 margin_top_10" >
+                <c:if test="#{filterPageBean.parentCategory != null}">
+                    <span>#{filterPageBean.parentCategory.title} > #{filterPageBean.category.title}</span>
+                </c:if>
+                <c:if test="#{filterPageBean.parentCategory == null}">
+                    <span>#{filterPageBean.category.title}</span>
+                </c:if>
+            </div>
+            <!--   <div class="container"> -->
+            <div class="col-md-12 main_content" >
+                <div class="row padding_0">
+                    <div class="col-md-3 col-sm-4 col-xs-12 hidden-xs filters">
+                        <!-- filters blocks -->
+                        <div class="filter_block price_block">
+                            <p>Цена</p>
+                            <p>
+                                <h:panelGroup id="priceGroup" layout="block">
+                                    <label for="price_min" class="text-muted">От</label>
+                                    <h:inputText value="#{filterPageBean.minPrice}" converterId="javax.faces.Integer" id="price_min" type="number" name="price_min" style="margin-left: 3px">
+                                        <f:ajax event="change" listener="#{filterPageBean.priceLimiterChange}" render=":mainForm:itemsBlock" execute=":mainForm:priceGroup" />
+                                    </h:inputText>
+                                    <label for="price_max" class="text-muted">До</label>
+                                    <h:inputText value="#{filterPageBean.maxPrice}" converterId="javax.faces.Integer" id="price_max" type="number" name="price_max" style="margin-left: 3px" />
+                                </h:panelGroup>
+                            </p>
+                            <script type="text/javascript">
+                                $( document ).ready(function() {
+                                    var minPriceV = parseInt("#{filterPageBean.minPrice}");
+                                    var maxPriceV = parseInt("#{filterPageBean.maxPrice}");
+                                    initSlider(minPriceV, maxPriceV);
+                                });
+                            </script>
+                            <p>
+                                <div id="slider_price"></div>
+                                <!-- <input id="ex2" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[0,1000]"/> -->
+                            </p>
+
+                        </div>
+
+                        <h:panelGroup id="filterBlock" layout="block">
+                            <c:if test="#{filterPageBean.colors.size() > 0}">
+                                <div class="filter_block color_block">
+                                    <p>Цвет</p>
+                                    <h:selectManyCheckbox value="#{filterPageBean.selectedColors}"  layout="pageDirection" styleClass="filter_style" >
+                                        <f:selectItems value="#{filterPageBean.colors}" var="color"
+                                                       itemLabel="#{color}" itemValue="#{color}"  />
+                                        <f:ajax event="change" listener="#{filterPageBean.changeListener}" render=":mainForm:itemsBlock" />
+                                    </h:selectManyCheckbox>
+                                </div>
+                            </c:if>
+
+                            <c:forEach items="#{filterPageBean.attributes}" var="attribute">
+                                <div class="filter_block teksture_block">
+                                    <p>#{attribute.title}</p>
+                                    <h:selectManyCheckbox value="#{filterPageBean.filters[attribute.id]}"  layout="pageDirection" styleClass="filter_style" >
+                                        <f:selectItems value="#{filterPageBean.getPropertiesByAttribute(attribute)}" var="property"
+                                                       itemLabel="#{property.title}" itemValue="#{property.id}"  />
+                                        <f:ajax event="change" listener="#{filterPageBean.changeListener}" render=":mainForm:itemsBlock" />
+                                    </h:selectManyCheckbox>
+                                </div>
+                            </c:forEach>
+                        </h:panelGroup>
+
+
+
+                        <div class="filter_block btn_reset_block">
+                            <!--<button type="submit" name="reset_filters" class="btn_reset_filters"><i class="fa fa-times"></i> Сбросить все фильтры</button>-->
+                            <p:commandButton actionListener="#{filterPageBean.resetFilters}" ajax="true" update=":mainForm:itemsBlock :mainForm:filterBlock"
+                                             value="&lt;i class='fa fa-times'&gt;&lt;/i&gt; Сбросить все фильтры" escape="false" styleClass="btn_reset_filters"  />
+
+                                <!--<p:ajax render=":mainForm:itemsBlock" />-->
+                            <!--</p:commandButton>-->
+                        </div>
+                        <div class="filter_block btn_reset_block visible-xs">
+                            <button type="button" name="hide_filters" class="btn_hide_filters"><i class="fa fa-times"></i> Закрыть меню фильтров</button>
+                        </div>
+                        <div class="clearfix visible-xs" style="margin-top:20px;"></div>
+
+                    </div>
+                    <div class="col-xs-12 visible-xs">
+                        <div class="filter_block">
+                            <button type="button" name="show_filters" class="btn_show_filters"><i class="fa fa-angle-down"></i> Открыть меню фильтров</button>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-8 col-xs-12" style="padding-left:0;">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-xs-12 filter_right_side">
+                                <h2 class="margin_fix filter_label" style="margin-bottom:10px;">
+                                    <c:if test="#{filterPageBean.parentCategory != null}">
+                                        #{filterPageBean.parentCategory.title}
+                                    </c:if>
+                                    <c:if test="#{filterPageBean.parentCategory == null}">
+                                        #{filterPageBean.category.title}
+                                    </c:if>
+                                </h2>
+                            </div>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <div class="sort pull-right">
+                                    <span style="line-height:2.2em; margin-right:5px;">Сортировать: </span>
+                                    <div class="item_sort" id="item_sort">
+                                        <span class="active_sort" id=""><span id="current_value" value="1">От дешевых к дорогим</span> <i class="fa fa-angle-down pull-right"></i></span>
+                                        <ul class="dropdown_sort hidden">
+                                            <li>
+                                                <!--<a href="#" class="active" value="1">От дешевых к дорогим</a>-->
+                                                <h:commandLink styleClass="active" value="От дешевых к дорогим">
+                                                    <f:ajax listener="#{filterPageBean.sortFromMinPriceToMax}" render=":mainForm:itemsBlock" />
+                                                </h:commandLink>
+                                            </li>
+                                            <li>
+                                                <!--<a href="#" class="" value="2">От дорогих к дешевым</a>-->
+                                                <h:commandLink  value="От дорогих к дешевым">
+                                                    <f:ajax listener="#{filterPageBean.sortFromMaxPriceToMin}" render=":mainForm:itemsBlock" />
+                                                </h:commandLink>
+                                            </li>
+                                            <li>
+                                                <!--<a href="#" class="" value="3">Популярные</a>-->
+                                                <h:commandLink  value="Популярные">
+                                                    <f:ajax listener="#{filterPageBean.sortPopular}" render=":mainForm:itemsBlock" />
+                                                </h:commandLink>
+                                            </li>
+                                            <li>
+                                                <!--<a href="#" class="" value="4">Новые</a>-->
+                                                <h:commandLink  value="Новые">
+                                                    <f:ajax listener="#{filterPageBean.sortNewDate}" render=":mainForm:itemsBlock" />
+                                                </h:commandLink>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="" value="5">По рейтингу</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end row-->
+                        <h:panelGroup id="itemsBlock" layout="block">
+                            <div class="row">
+                                <div class="col-md-12 filter_right_side" >
+                                    <ui:repeat value="#{filterPageBean.items}" var="item">
+                                        <div class="filter_photo_block">
+                                            <ui:param name="isSale" value="#{itemUtil.isSale(item.saleValue, item.saleStart, item.saleEnd)}" />
+                                            <ui:fragment rendered="#{isSale}">
+                                                <div class="label_sale">SALE</div>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{not isSale and item.hit}">
+                                                <!--<div class="label_hit">HIT</div>-->
+                                                <div class="label_hit">HIT</div>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{item.reservation}">
+                                                <div class="label_zakaz">под заказ</div>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{not isSale and not item.hit and filterPageBean.isNewItem(item.dateModified)}">
+                                                <div class="label_new">NEW</div>
+                                            </ui:fragment>
+                                            <h:link outcome="item" styleClass="photo">
+                                                <f:param name="id" value="#{item.id}"  />
+                                                <p:graphicImage value="#{imageDishBean.image}">
+                                                    <f:param name="dishId" value="#{item.id}" />
+                                                    <f:param name="small" value="true" />
+                                                </p:graphicImage>
+                                            </h:link>
+                                            <!--<a href="#" class="photo">-->
+                                                <!---->
+                                            <!--</a>-->
+                                            <div class="description">
+                                                <!--<p class="text-muted firm_name">#{item.firm}</p>-->
+                                                <p class="item_name">Артикул #{item.productCode}</p>
+                                                <p class="item_name">#{item.title}</p>
+                                                <ui:fragment rendered="#{not isSale}">
+                                                    <p class="price">#{frontSiteSettings.formatPrice(item.price)}</p>
+                                                </ui:fragment>
+                                                <ui:fragment rendered="#{isSale}">
+                                                    <p class="price">
+                                                        <span style="text-decoration: line-through" class="text-muted">
+                                                            #{frontSiteSettings.formatPrice(item.price)}
+                                                        </span>
+                                                    #{frontSiteSettings.formatPrice(item.price - item.price * item.saleValue / 100)}
+                                                    </p>
+                                                </ui:fragment>
+                                            </div>
+                                        </div>
+                                    </ui:repeat>
+
+
+                                    <!--<div class="filter_photo_block filter_photo_block_last">-->
+                                        <!--<a href="#" class="photo">-->
+                                            <!--<i class="fa fa-repeat spin_on_hover"></i>-->
+                                        <!--</a>-->
+                                        <!--<div class="description">-->
+                                            <!--<p>-->
+                                                <!--<a href="#">Загрузить еще</a>-->
+                                            <!--</p>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <div class="clearfix"></div>
+                                    <c:if test="#{filterPageBean.countOfAvailablePages > 1}" >
+                                        <!--pagination-->
+                                        <div class="pagination_block center">
+                                            <ul class="pagination">
+                                                <li>
+                                                    <h:commandLink action="#{filterPageBean.changePage(filterPageBean.currentPageNum -1 -1)}" value="&laquo;">
+                                                        <f:ajax render=":mainForm:itemsBlock" />
+                                                    </h:commandLink>
+                                                    <!--<a href="#">&laquo;</a>-->
+                                                </li>
+                                                <ui:param name="totalCount" value="#{filterPageBean.countOfAvailablePages}" />
+                                                <ui:param name="currentPage" value="#{filterPageBean.currentPageNum}" />
+                                                <c:forEach begin="1" end="#{totalCount}" var="page">
+                                                    <ui:param name="renderQ" value="#{page == 1 or page == totalCount or(page >= currentPage-2 and page &lt;= currentPage+2)}" />
+                                                    <ui:fragment rendered="#{renderQ}">
+                                                        <li class="#{page == currentPage ? 'active' : ''}">
+                                                            <h:commandLink action="#{filterPageBean.changePage(page-1)}" value="#{page}">
+                                                                <f:ajax render=":mainForm:itemsBlock" />
+                                                            </h:commandLink>
+                                                        </li>
+                                                    </ui:fragment>
+                                                    <ui:fragment rendered="#{(page == currentPage-3 and currentPage-3 >1) or(page == currentPage+3 and currentPage+3 &lt; totalCount)}" >
+                                                        <li>
+                                                            <a>
+                                                                ...
+                                                            </a>
+                                                        </li>
+                                                    </ui:fragment>
+                                                </c:forEach>
+                                                <li>
+                                                    <h:commandLink action="#{filterPageBean.changePage(filterPageBean.currentPageNum -1 +1)}" value="&raquo;">
+                                                        <f:ajax render=":mainForm:itemsBlock" />
+                                                    </h:commandLink>
+                                                    <!--<a href="#">&raquo;</a>-->
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+</h:form>
+    </ui:define>
+</ui:composition>
+</h:body>
+</html>

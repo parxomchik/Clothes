@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+<ui:composition template="../../templates/admin/BasicAdminTemplate.xhtml">
+<ui:define name="title"><title>System user edit : #{constantsBean.projectName}</title></ui:define>
+    <ui:define name="sidebar">
+        <ui:include src="sidebar.xhtml"/>
+    </ui:define>
+<ui:define name="content">
+<!-- /.modal -->
+<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+<!-- BEGIN PAGE HEADER-->
+<!--<h3 class="page-title">-->
+    <!--Dish edit-->
+<!--</h3>-->
+<!-- BEGIN PAGE CONTENT-->
+<div class="row">
+<div class="col-md-12">
+<h:form id="form" enctype="multipart/form-data">
+<p:growl id="msgs" showDetail="true" life="1500" />
+<!-- BEGIN SAMPLE TABLE PORTLET-->
+<div class="portlet box green">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="fa fa-cogs"></i>System user edit
+    </div>
+    <div class="tools">
+        <h:commandLink action="#{systemUserEditBean.save}"  styleClass="collapse" />
+        <!--<a href="#portlet-config" data-toggle="modal" class="config">-->
+        <!--</a>-->
+        <h:commandLink action="#{systemUserEditBean.reload}"  styleClass="reload" />
+        <!--<a href="javascript:;" class="reload">-->
+        <!--</a>-->
+        <h:commandLink action="#{systemUserEditBean.addNew}"  styleClass="glyphicon glyphicon-plus" style="color: #fff; margin-top: -9px;" />
+    </div>
+</div>
+<div class="portlet-body flip-scroll">
+<p:dataTable var="user" value="#{systemUserEditBean.users}"  editable="true" editMode="cell"
+        tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric">
+    <p:column headerText="Id" style="width: 3%; text-align: center">
+        <h:outputText value="#{user.id}" />
+    </p:column>
+
+    <p:column headerText="Name" style="width: 15%; padding: 5px"  >
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{user.name}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{user.name}" style="width:96%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Email" style="padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{user.email}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{user.email}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Phone" style="padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{user.phone}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{user.phone}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Address" style="padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{user.street}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{user.street}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Password" style="padding: 5px">
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{systemUserEditBean.replacePassWithDots(user.pass)}" escape="false" /></f:facet>
+            <f:facet name="input"><h:inputSecret value="#{user.pass}" style="width:100%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Reg. date" style="padding: 5px">
+        <h:outputText value="#{user.regDate}" style="width:100%" />
+    </p:column>
+
+    <p:column headerText="Role" style="width: 10%; text-align: center">
+        <h:selectOneMenu value="#{user.role}" style="width:96%" converter="#{roleConverter}" >
+            <f:selectItems value="#{systemUserEditBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}"/>
+        </h:selectOneMenu>
+    </p:column>
+
+    <p:column headerText="Active" style="width: 4%; text-align: center">
+        <h:selectBooleanCheckbox value="#{user.active}" align="middle" />
+    </p:column>
+</p:dataTable>
+</div>
+</div>
+</h:form>
+</div>
+</div>
+</ui:define>
+</ui:composition>
+</h:body>
+</html>

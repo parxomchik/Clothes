@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+<ui:composition template="../../templates/admin/BasicAdminTemplate.xhtml">
+<ui:define name="title"><title>News edit : #{constantsBean.projectName}</title></ui:define>
+    <ui:define name="sidebar">
+        <ui:include src="sidebar.xhtml"/>
+    </ui:define>
+<ui:define name="content">
+<!-- /.modal -->
+<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+<!-- BEGIN PAGE HEADER-->
+<!--<h3 class="page-title">-->
+    <!--Dish edit-->
+<!--</h3>-->
+<!-- BEGIN PAGE CONTENT-->
+<div class="row">
+<div class="col-md-12">
+<h:form id="form" enctype="multipart/form-data">
+<p:growl id="msgs" showDetail="true" life="1500" />
+<!-- BEGIN SAMPLE TABLE PORTLET-->
+<div class="portlet box green">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="fa fa-cogs"></i>News edit
+    </div>
+    <div class="tools">
+        <h:commandLink action="#{newsEditBean.save}"  style="color:#fff" styleClass="glyphicon glyphicon-floppy-disk" />
+        <!--<a href="#portlet-config" data-toggle="modal" class="config">-->
+        <!--</a>-->
+        <h:commandLink action="#{newsEditBean.reload}"  styleClass="reload" />
+        <!--<a href="javascript:;" class="reload">-->
+        <!--</a>-->
+        <h:commandLink action="#{newsEditBean.addNew}"  styleClass="glyphicon glyphicon-plus" style="color: #fff; margin-top: -9px;" />
+    </div>
+</div>
+<div class="portlet-body flip-scroll">
+<p:dataTable id="dataTable" var="news" value="#{newsEditBean.newses}" editable="true" editMode="cell"
+        tableStyleClass="table table-bordered table-striped table-condensed flip-content" rowStyleClass="numeric" rowIndexVar="index" draggableRows="true">
+
+    <p:ajax event="rowReorder" listener="#{newsEditBean.onRowReorder}" update=":form:msgs" globalOnly="true"   />
+
+    <p:column headerText="Id" style="width: 3%; text-align: center">
+        <h:outputText value="#{news.id}" />
+    </p:column>
+
+    <p:column headerText="Title" style="width: 15%; padding: 5px"  >
+        <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{news.title}" /></f:facet>
+            <f:facet name="input"><h:inputText value="#{news.title}" style="width:96%" /></f:facet>
+        </p:cellEditor>
+    </p:column>
+
+    <p:column headerText="Description" style="padding: 5px">
+        <h:panelGroup id="renderBlock" layout="block">
+            <h:outputText value="#{news.description}" escape="false" id = "newDesc" style="min-width: 100%; min-height: 20px" styleClass="descriptionOverflow"/>
+
+            <p:remoteCommand name="updateTableDesc" process="editor" update="dataTable" />
+            <p:overlayPanel id="descPanel" for="newDesc" showEvent="click" hideEvent="mousedown" showCloseIcon="true" dynamic="true">
+                <p:editor id="editor" widgetVar="editorWidget"  value="#{news.description}" width="600" maxlength="10000" onchange="var updateNewDesc = function () {
+                    var index = '#{index}';
+                    console.log(index);
+                    PrimeFaces.widgets['editorWidget'].saveHTML();
+                    PrimeFaces.ab({
+                        source:'',
+                        f: 'form',
+                        process: 'form:dataTable:' + index + ':renderBlock',
+                        update: 'form:dataTable:' + index + ':newDesc',
+                        pa: arguments[0]
+                    });
+                };
+                updateNewDesc()" />
+            </p:overlayPanel>
+        </h:panelGroup>
+    </p:column>
+
+    <p:column headerText="Image" style="width: 4%; text-align: center" >
+        <ui:fragment rendered="#{news.image == null}">
+            <label class="inputIcon">
+                <span class="glyphicon glyphicon-plus" />
+                <p:fileUpload fileUploadListener="#{newsEditBean.upload}" ajax="true" auto="true" style="position: absolute" update=":form:msgs :form:dataTable">
+                    <f:attribute name="newsId" value="#{news.id}" />
+                </p:fileUpload>
+            </label>
+        </ui:fragment>
+        <ui:fragment rendered="#{news.image != null}">
+            <label class="inputIcon">
+                <span class="glyphicon glyphicon-remove" />
+                <h:commandButton action="#{newsEditBean.removeImage(news.id)}" />
+            </label>
+        </ui:fragment>
+    </p:column>
+
+    <p:column headerText="Show date" style="width: 4%; text-align: center">
+        <h:selectBooleanCheckbox value="#{news.showDate}" align="middle" />
+    </p:column>
+
+    <p:column headerText="Active" style="width: 4%; text-align: center">
+        <h:selectBooleanCheckbox value="#{news.active}" align="middle" />
+    </p:column>
+
+    <p:column headerText="" style="width: 5%; text-align: center">
+        <h:link outcome="newsEditSingle" value="Edit" styleClass="btn btn-default" >
+            <f:param name="id" value="#{news.id}" />
+        </h:link>
+    </p:column>
+
+</p:dataTable>
+</div>
+</div>
+</h:form>
+</div>
+</div>
+</ui:define>
+</ui:composition>
+</h:body>
+</html>
